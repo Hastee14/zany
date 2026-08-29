@@ -2,45 +2,131 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Valentine Letter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>One Month</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Aldrich&family=Pixelify+Sans:wght@400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
       rel="stylesheet"
     />
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css?v=40" />
   </head>
+
   <body>
-    <!-- Envelope Screen -->
-    <div id="envelope-container">
-      <img src="envelope.png" alt="Envelope" id="envelope" />
-      <p>♡ Letter for You ♡</p>
-    </div>
 
-    <!-- Letter Screen -->
-    <div id="letter-container">
-      <div class="letter-window">
-        <h1 id="letter-title">Will you be my Valentine?</h1>
+    <canvas id="hearts-canvas" aria-hidden="true"></canvas>
 
-        <img src="cat_heart.gif" class="cat" id="letter-cat" />
+    <button id="music-toggle" type="button" aria-label="Toggle music" hidden>
+      <span id="music-icon">&#9834;</span>
+    </button>
 
-        <div class="buttons" id="letter-buttons">
-          <img src="yes.png" class="btn yes-btn" alt="Yes" />
+    <!-- ===================== 1. The lock ===================== -->
+    <section id="scene-lock" class="scene is-active">
+      <div class="lock-card" id="lock-card">
+        <p class="occasion" id="occasion-label"></p>
+        <img src="envelope.png" alt="" id="envelope" />
+        <p class="lock-title" id="lock-title"></p>
+        <p class="lock-hint" id="lock-hint"></p>
 
-          <div class="no-wrapper">
-            <img src="no.png" class="btn no-btn" alt="No" />
-          </div>
+        <div class="pin-dots" id="pin-dots">
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
         </div>
 
-        <p id="final-text" class="final-text" style="display: none">
-          <strong>Valentine Date:</strong> Meow Restaurant at 7pm. Dress fancy!
-        </p>
+        <div class="keypad" id="keypad">
+          <button class="key" type="button" data-key="1">1</button><button class="key" type="button" data-key="2">2</button><button class="key" type="button" data-key="3">3</button><button class="key" type="button" data-key="4">4</button><button class="key" type="button" data-key="5">5</button><button class="key" type="button" data-key="6">6</button><button class="key" type="button" data-key="7">7</button><button class="key" type="button" data-key="8">8</button><button class="key" type="button" data-key="9">9</button><span class="key key--blank" aria-hidden="true"></span><button class="key" type="button" data-key="0">0</button><button class="key key--del" type="button" data-key="del" aria-label="Delete">&#9003;</button>
+        </div>
+
+        <p class="lock-error" id="lock-error" hidden></p>
       </div>
-    </div>
-    <script src="script.js"></script>
+    </section>
+
+    <!-- ===================== 3. The page ===================== -->
+    <section id="scene-letterpage" class="scene">
+      <div class="page">
+
+        <header class="hero">
+          <p class="hero-kicker" id="hero-kicker"></p>
+          <h1 class="page-title" id="page-title"></h1>
+          <div class="photo-frame photo-frame--lg">
+            <img id="her-photo" alt="" />
+            <span class="photo-missing" id="her-missing" hidden></span>
+          </div>
+          <p class="photo-caption" id="her-caption"></p>
+        </header>
+
+        <article class="letter-paper reveal" id="sec-letter">
+          <div id="letter-body"></div>
+          <p class="signoff" id="signoff"></p>
+        </article>
+
+        <section class="sec" id="sec-gallery" hidden>
+          <h2 class="sec-title reveal" id="gallery-title"></h2>
+          <div class="gallery" id="gallery-grid"></div>
+        </section>
+
+        <section class="sec" id="sec-videos" hidden>
+          <h2 class="sec-title reveal" id="videos-title"></h2>
+          <div class="videos" id="videos-grid"></div>
+        </section>
+
+        <section class="sec" id="sec-reasons" hidden>
+          <h2 class="sec-title reveal" id="reasons-title"></h2>
+          <ol class="reasons" id="reasons-list"></ol>
+        </section>
+
+        <section class="sec" id="sec-counter" hidden>
+          <h2 class="sec-title reveal" id="counter-title"></h2>
+          <div class="counter reveal" id="counter"></div>
+          <p class="counter-since reveal" id="counter-since"></p>
+        </section>
+
+        <section class="sec" id="sec-nicknames" hidden>
+          <h2 class="sec-title reveal" id="nicknames-title"></h2>
+          <p class="nicks-hint reveal" id="nicknames-hint"></p>
+          <div class="nicks" id="nicks-grid"></div>
+        </section>
+
+        <section class="sec sec-ask" id="sec-ask" hidden>
+          <button class="ask-card reveal" id="ask-card" type="button">
+            <span class="ask-card-label" id="ask-card-label"></span>
+            <span class="ask-card-sub" id="ask-card-sub"></span>
+          </button>
+
+          <div class="ask-body" id="ask-body" hidden>
+          <div class="photo-frame photo-frame--ask">
+            <img id="us-photo" alt="Us" />
+            <span class="photo-missing" id="us-missing" hidden></span>
+          </div>
+          <p class="ask-kicker" id="ask-kicker"></p>
+          <h2 class="ask-lead" id="ask-lead"></h2>
+          <p class="ask-question" id="ask-question"></p>
+          <p class="ask-shy" id="ask-shy"></p>
+          <div class="ask-buttons">
+            <img src="yes.png" class="btn yes-btn" id="yes-btn" alt="Yes" />
+            <span class="no-slot"><img src="no.png" class="btn no-btn" id="no-btn" alt="No" /></span>
+          </div>
+          </div>
+        </section>
+
+        <section class="sec" id="sec-answered" hidden>
+          <h2 class="answered-title" id="yes-title"></h2>
+          <p class="answered-sub" id="yes-subtitle"></p>
+        </section>
+
+        <section class="sec" id="sec-closing" hidden>
+          <p class="closing" id="closing-text"></p>
+        </section>
+      </div>
+    </section>
+
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <audio id="song" loop preload="auto"></audio>
+    <script src="script.js?v=40"></script>
   </body>
 </html>

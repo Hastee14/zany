@@ -1,139 +1,997 @@
+/* ============================================================
+   Palette — burgundy first (her favourite), maroon, then pinks
+   ============================================================ */
+:root {
+    --burgundy: #6b0f2a;
+    --maroon:   #8a2433;
+    --rose:     #b8455f;
+    --pink:     #e28fa0;
+    --blush:    #f6dbe0;
+    --paper:    #fff7f7;
+
+    --ink:      #5a0d22;
+    --ink-soft: #8f4a5b;
+
+    --lily-petal: #f7d3db;
+
+    /* the page itself is burgundy now; cards sit on top of it in cream */
+    --bg:         #3a0715;
+    --ink-light:  #f7dfe4;
+
+    --frame-shadow: rgba(0, 0, 0, 0.38);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+html { scroll-behavior: smooth; }
+
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100svh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url("heart-bg.jpg");
-    font-family: "Pixelify Sans", sans-serif;
+    background: var(--bg) url("lily-bg.svg") repeat;
+    background-size: 440px 440px;
+    font-family: "Pixelify Sans", "Courier New", monospace;
+    color: var(--ink-light);
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Envelope Screen */
-#envelope-container {
-    text-align: center;
-    cursor:pointer;
+body.reading {
+    display: block;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: flex-start;
 }
 
-@keyframes pulse {
-    0% {
-        transform:scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
+/* [hidden] must always win, even where `display` is set elsewhere */
+[hidden] { display: none !important; }
 
-#envelope{
-    width: 200px;
-    animation: pulse 1.5s infinite;
-    cursor: pointer;
-}
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
-#letter-container{
-    display: none;
-    position:fixed;
+/* ============================================================
+   FX canvases
+   ============================================================ */
+#hearts-canvas,
+#confetti-canvas {
+    position: fixed;
     inset: 0;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
-.letter-window{
-    width: 90vw;
-    max-width: 800px;
-    aspect-ratio: 3/2;
-    padding: 20px 20px 0 20px;
-    display: flex;
+#hearts-canvas { z-index: 0; }
+#confetti-canvas { z-index: 90; }
+
+/* ============================================================
+   Music toggle
+   ============================================================ */
+#music-toggle {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    font: inherit;
+    font-size: 20px;
+    color: var(--paper);
+    background: var(--burgundy);
+    border: 3px solid var(--rose);
+    border-radius: 10px;
+    box-shadow: 3px 3px 0 var(--frame-shadow);
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+#music-toggle:hover { transform: translateY(-2px); }
+#music-toggle.is-muted { opacity: 0.45; }
+
+/* ============================================================
+   Scenes
+   ============================================================ */
+.scene {
+    display: none;
+    position: relative;
+    z-index: 10;
+    width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    background-image: url("window.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 12px;
-    gap: 1px;
-    padding-top: 180px;
-
-    transform: scale(1.2);
-    opacity: 0;
-    transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
-.letter-window.open {
-    transform: scale(1);
-    opacity: 1;
+.scene.is-active { display: flex; }
+
+/* ---------- 1. Envelope ---------- */
+#scene-envelope { cursor: pointer; text-align: center; }
+
+.occasion {
+    margin: 0 0 22px;
+    font-size: clamp(20px, 5.5vw, 30px);
+    color: var(--pink);
+    letter-spacing: 2px;
+    text-transform: lowercase;
+}
+
+#envelope {
+    width: min(46vw, 220px);
+    image-rendering: pixelated;
+    animation: pulse 1.6s ease-in-out infinite;
+    filter: drop-shadow(4px 6px 0 var(--frame-shadow));
+    will-change: transform;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1) rotate(-1deg); }
+    50%      { transform: scale(1.08) rotate(1deg); }
+}
+
+.hint {
+    margin: 18px 0 0;
+    font-size: clamp(17px, 4.2vw, 24px);
+    color: rgba(247, 223, 228, 0.72);
+    letter-spacing: 1px;
+    animation: fadePulse 2s ease-in-out infinite;
+}
+
+@keyframes fadePulse {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+}
+
+/* ---------- The lock ---------- */
+.lock-card {
+    background: rgba(107, 15, 42, 0.92);
+    border: 3px solid var(--rose);
+    border-radius: 20px;
+    box-shadow: 10px 10px 0 var(--frame-shadow);
+    padding: clamp(26px, 6vw, 40px) clamp(24px, 6vw, 46px);
+    text-align: center;
+    cursor: pointer;
+    animation: cardIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+
+.lock-card #envelope {
+    width: min(34vw, 140px);
+    margin-bottom: 4px;
+}
+
+.lock-card .occasion { margin-bottom: 10px; }
+
+.lock-title {
+    margin: 12px 0 4px;
+    font-size: clamp(18px, 4.6vw, 24px);
+    color: var(--blush);
+}
+
+.lock-hint {
+    margin: 0 0 24px;
+    font-size: clamp(13px, 3.4vw, 16px);
+    color: var(--pink);
+}
+
+/* ---------- The four dots ---------- */
+.pin { position: relative; }
+
+.pin-dots {
+    display: flex;
+    justify-content: center;
+    gap: clamp(14px, 4vw, 20px);
+}
+
+.pin-dot {
+    width: clamp(15px, 4vw, 19px);
+    height: clamp(15px, 4vw, 19px);
+    border-radius: 50%;
+    border: 2.5px solid var(--pink);
+    background: transparent;
+    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pin-dot.filled {
+    background: var(--pink);
+    transform: scale(1.18);
+    box-shadow: 0 0 0 4px rgba(226, 143, 160, 0.18);
+}
+
+/* ---------- The keypad ---------- */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: clamp(9px, 2.6vw, 13px);
+    margin-top: clamp(24px, 5vw, 30px);
+}
+
+.key {
+    font: inherit;
+    font-size: clamp(19px, 4.8vw, 23px);
+    color: var(--blush);
+    width: clamp(50px, 14.5vw, 62px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    background: rgba(184, 69, 95, 0.16);
+    border: 2px solid var(--rose);
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, transform 0.09s ease;
+}
+
+.key:hover  { background: rgba(184, 69, 95, 0.34); }
+.key:active { background: var(--rose); transform: scale(0.9); }
+
+.key--blank { border: none; background: none; cursor: default; }
+.key--del   { font-size: clamp(16px, 4vw, 19px); }
+
+.lily-ic-wrap { display: inline-block; line-height: 0; }
+
+.lily-ic {
+    width: 1.05em;
+    height: 1.05em;
+    vertical-align: -0.17em;
+}
+
+.page-foot .lily-ic { width: 1.6em; height: 1.6em; }
+
+.lock-error {
+    margin: 20px 0 0;
+    font-size: clamp(13px, 3.4vw, 15px);
+    color: var(--pink);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-9px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-5px); }
+    80%      { transform: translateX(4px); }
+}
+
+.lock-card.shake { animation: shake 0.4s ease; }
+
+.lock-card.unlocked {
+    transition: transform 0.42s ease, opacity 0.42s ease;
+    transform: scale(1.04);
+    opacity: 0;
+}
+
+/* ============================================================
+   2. The window
+   ============================================================ */
+.letter-window {
+    position: relative;
+    width: min(94vw, 760px);
+    max-height: 92svh;
+    aspect-ratio: 5000 / 4563;
+    background: url("window.png") center / 100% 100% no-repeat;
+    image-rendering: pixelated;
+    container-type: size;
+
+    transform: scale(1.15);
+    opacity: 0;
+    transition: transform 0.55s cubic-bezier(0.22, 1.2, 0.36, 1), opacity 0.5s ease;
+}
+
+.letter-window.open { transform: scale(1); opacity: 1; }
+.letter-window.dismiss { transform: scale(0.92); opacity: 0; }
+
+.window-content {
+    position: absolute;
+    inset: 31% 8.5% 9.5% 8.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    color: var(--ink);
+}
+
+.pane {
+    display: none;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5cqh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.pane.is-active {
+    display: flex;
+    animation: paneIn 0.45s ease both;
+}
+
+@keyframes paneIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
 }
 
 h1 {
-    font-size: 30px;
-    margin:0;
+    margin: 0;
+    font-size: 6cqw;
+    line-height: 1.15;
+    font-weight: 600;
+    color: var(--burgundy);
+    text-wrap: balance;
 }
 
-p {
-    font-size: 40px;
+.typed {
+    margin: 0;
+    font-size: 4.4cqw;
+    line-height: 1.65;
+    white-space: pre-line;
+    max-width: 92%;
+    text-wrap: balance;
 }
 
-/* Cat */
-
-.cat {
-    width: 250px;
-    margin: 10px 0;
-    transition: width 0.4s ease;
+.typed::after {
+    content: "\258C";
+    animation: caret 0.9s steps(1) infinite;
 }
 
-.letter-window.final .cat {
-    width: 180px;
+.typed.done::after { content: none; }
+
+@keyframes caret {
+    0%, 49%   { opacity: 1; }
+    50%, 100% { opacity: 0; }
 }
 
-/* buttons */
+/* ---------- Photo frames ---------- */
+.photo-frame {
+    position: relative;
+    display: inline-block;
+    background: var(--burgundy);
+    box-shadow: 0.6cqw 0.6cqw 0 var(--frame-shadow);
+    transform: rotate(-1.5deg);
+    flex: 0 1 auto;
+    min-height: 0;
+}
+
+.photo-frame--sm {
+    padding: 1.4cqh 1.4cqh 2.4cqh;
+    max-height: 38cqh;
+    overflow: hidden;
+}
+
+.photo-frame--sm img {
+    display: block;
+    max-height: 30cqh;
+    max-width: 44cqw;
+}
+
+.photo-frame img { image-rendering: auto; }
+
+.photo-missing {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: var(--ink-soft);
+    border: 2px dashed var(--rose);
+    background: rgba(255, 255, 255, 0.55);
+    padding: 10px;
+    white-space: pre-line;
+    line-height: 1.4;
+}
+
+.photo-frame--sm .photo-missing {
+    width: 40cqw;
+    height: 26cqh;
+    font-size: 2.6cqw;
+}
+
+/* ---------- Yes / No ---------- */
 .buttons {
     display: flex;
     justify-content: center;
-    gap: 30px;
-    position: relative;
-}
-
-.no-wrapper{
-    position:relative;
+    align-items: center;
+    gap: 5cqw;
+    flex: 0 0 auto;
 }
 
 .btn {
-    width: 120px;
-    cursor: pointer;
+    width: 21cqw;
+    height: auto;
+    image-rendering: pixelated;
     user-select: none;
-}
-
-.yes-btn,
-.no-btn {
-width: 120px;
-height: auto;
-display: inline-block;
+    -webkit-user-drag: none;
 }
 
 .yes-btn {
-    position: relative;
-    z-index: 2;
-    transform-origin: center center;
-    transition: transform 0.3s ease;
+    cursor: pointer;
+    transform-origin: center;
+    transition: transform 0.25s cubic-bezier(0.22, 1.2, 0.36, 1);
 }
+
+.yes-btn:hover { transform: scale(1.12) rotate(-2deg); }
+
+.no-slot { display: inline-block; width: 21cqw; }
 
 .no-btn {
-    z-index: 1;
-    position: relative;
-    transition: transform 0.15s ease;
     cursor: default;
+    transition: left 0.25s ease, top 0.25s ease, transform 0.25s ease;
+    z-index: 80;
 }
 
-.final-text{
-    font-size: 22px;
-    line-height: 1.4;
+.yes-sub {
+    margin: 0;
+    font-size: 3.5cqw;
+    line-height: 1.5;
+    max-width: 90%;
+    color: var(--ink-soft);
+    text-wrap: balance;
+}
+
+.next-btn {
+    flex: 0 0 auto;
+    font: inherit;
+    font-size: 3.5cqw;
+    color: var(--paper);
+    background: var(--burgundy);
+    border: 0.5cqw solid var(--maroon);
+    border-radius: 8px;
+    padding: 1.6cqh 3.4cqw;
+    box-shadow: 0.6cqw 0.6cqw 0 var(--frame-shadow);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.next-btn:hover {
+    transform: translate(-0.2cqw, -0.2cqw);
+    box-shadow: 0.9cqw 0.9cqw 0 var(--frame-shadow);
+}
+
+.next-btn:active {
+    transform: translate(0.4cqw, 0.4cqw);
+    box-shadow: 0.2cqw 0.2cqw 0 var(--frame-shadow);
+}
+
+/* ============================================================
+   3. The page
+   ============================================================ */
+#scene-letterpage.is-active {
+    display: block;
+    animation: pageIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.page {
+    width: min(92vw, 640px);
+    margin: 0 auto;
+    padding: 7vh 0 12vh;
     text-align: center;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgba(255,240,240,0.5);
-    border-radius: 12px;
+}
+
+.js-reveal .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.js-reveal .reveal.in { opacity: 1; transform: none; }
+
+.hero-kicker {
+    margin: 0 0 6px;
+    font-size: clamp(14px, 3.6vw, 17px);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--pink);
+}
+
+.page-title {
+    font-size: clamp(30px, 7.2vw, 46px);
+    margin: 0 0 28px;
+    line-height: 1.2;
+    color: var(--blush);
+}
+
+.photo-frame--lg {
+    padding: 14px 14px 22px;
+    max-width: 100%;
+    box-shadow: 6px 6px 0 var(--frame-shadow);
+}
+
+.photo-frame--lg img {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    max-height: 58vh;
+    /* height:auto + max-height scales the photo down whole. `cover` would
+       crop it instead -- which eats the top and bottom of any portrait
+       phone photo, i.e. her face. */
+    height: auto;
+    margin: 0 auto;
+}
+
+.photo-frame--lg .photo-missing {
+    width: min(78vw, 380px);
+    height: 240px;
+    font-size: 15px;
+}
+
+.photo-caption {
+    margin: 18px 0 0;
+    font-size: clamp(16px, 4vw, 20px);
+    color: var(--pink);
+    white-space: pre-line;
+}
+
+/* ---------- The letter ---------- */
+.letter-paper {
+    position: relative;
+    margin-top: 46px;
+    padding: clamp(24px, 5.5vw, 38px);
+    background: var(--burgundy);
+    border: 3px solid var(--rose);
+    border-radius: 14px;
+    box-shadow: 8px 8px 0 var(--frame-shadow);
+    text-align: left;
+    color: var(--ink-light);
+}
+
+.letter-paper p {
+    margin: 0 0 1.25em;
+    font-size: clamp(16px, 3.9vw, 18px);
+    line-height: 1.95;
+}
+
+.letter-paper p:last-child { margin-bottom: 0; }
+
+.signoff {
+    margin-top: 1.8em !important;
+    text-align: right;
+    color: var(--pink);
+    white-space: pre-line;
+}
+
+/* ---------- Section chrome ---------- */
+.sec { margin-top: 74px; }
+
+.sec-title {
+    /* was flex, for the lilies that used to sit either side. Plain block lets
+       long headings balance across lines instead of orphaning the last word. */
+    display: block;
+    text-wrap: balance;
+    max-width: 20ch;
+    margin-inline: auto;
+    font-size: clamp(22px, 5.4vw, 30px);
+    margin: 0 0 26px;
+    line-height: 1.25;
+    color: var(--blush);
+}
+
+/* ---------- Gallery ---------- */
+.gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+}
+
+.card-photo {
+    background: var(--burgundy);
+    color: var(--ink-light);
+    padding: 14px 14px 18px;
+    box-shadow: 6px 6px 0 var(--frame-shadow);
+    max-width: 100%;
+}
+
+.card-photo:nth-child(odd)  { transform: rotate(-1.8deg); }
+.card-photo:nth-child(even) { transform: rotate(1.8deg); }
+
+.card-photo img {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin: 0 auto;
+    background: var(--blush);
+}
+
+/* Video gets a DARK bed, not the blush one. Blush shows up as pale bars down
+   the sides of the clip once it's expanded, which looks like a mistake. */
+.card-photo video {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin: 0 auto;
+    background: #14030a;
+}
+
+/* Fullscreen: black bars and a black backdrop, like any normal player */
+video:fullscreen,
+video:-webkit-full-screen {
+    background: #000;
+}
+
+video::backdrop,
+video:-webkit-full-screen::backdrop {
+    background: #000;
+}
+
+.card-photo .photo-missing {
+    width: min(72vw, 360px);
+    height: 220px;
+    font-size: 14px;
+}
+
+.card-title {
+    margin: 16px 0 0;
+    font-size: clamp(18px, 4.4vw, 22px);
+    line-height: 1.3;
+    color: var(--blush);
+}
+
+.card-note,
+.card-caption {
+    margin: 10px auto 0;
+    max-width: 42ch;
+    font-size: clamp(14px, 3.5vw, 15px);
+    color: var(--pink);
+    line-height: 1.75;
+    white-space: pre-line;
+    text-wrap: pretty;
+}
+
+/* ---------- Videos ---------- */
+/* One per row. Two-up made each clip a small tile; these are the moments,
+   they should be big. */
+.videos {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+    align-items: center;
+}
+
+.videos .card-photo.card-video {
+    transform: none;
+    padding: 10px 10px 16px;
+}
+
+.videos .card-photo.card-video { width: 100%; }
+
+/* width:auto so a PORTRAIT clip sizes by its own shape and centres, instead
+   of being stretched into a wide box with black bars either side. */
+.videos .card-photo video {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 72vh;
+    margin: 0 auto;
+}
+
+.videos .card-title { font-size: clamp(18px, 4.4vw, 22px); }
+.videos .card-note { font-size: clamp(14px, 3.5vw, 15px); }
+
+.videos .card-photo .photo-missing {
+    width: 100%;
+    height: 170px;
+}
+
+/* ---------- Reasons ---------- */
+.reasons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    counter-reset: reason;
+}
+
+.reasons li {
+    counter-increment: reason;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    background: var(--burgundy);
+    border: 3px solid var(--maroon);
+    border-radius: 10px;
+    padding: 15px 17px;
+    box-shadow: 5px 5px 0 var(--frame-shadow);
+    font-size: clamp(15px, 3.8vw, 17px);
+    line-height: 1.6;
+    color: var(--ink-light);
+}
+
+.reasons li::before {
+    content: counter(reason);
+    flex: 0 0 auto;
+    min-width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    background: var(--pink);
+    color: var(--burgundy);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* ---------- Counter ---------- */
+.counter {
+    display: flex;
+    justify-content: center;
+    gap: clamp(8px, 2.5vw, 16px);
+    flex-wrap: wrap;
+}
+
+.count-box {
+    background: var(--burgundy);
+    border: 3px solid var(--maroon);
+    border-radius: 10px;
+    box-shadow: 5px 5px 0 var(--frame-shadow);
+    padding: 13px clamp(8px, 3vw, 18px);
+    min-width: clamp(64px, 19vw, 88px);
+}
+
+.count-num {
+    display: block;
+    font-size: clamp(24px, 6.5vw, 34px);
+    line-height: 1.1;
+    color: var(--blush);
+    font-variant-numeric: tabular-nums;
+}
+
+.count-label {
+    display: block;
+    margin-top: 4px;
+    font-size: clamp(11px, 2.9vw, 13px);
+    color: var(--pink);
+    letter-spacing: 0.5px;
+}
+
+.counter-since {
+    margin: 18px 0 0;
+    font-size: clamp(14px, 3.6vw, 16px);
+    color: var(--pink);
+}
+
+/* ---------- Nicknames ---------- */
+.nicks-hint {
+    margin: -14px 0 24px;
+    font-size: clamp(13px, 3.4vw, 15px);
+    color: var(--pink);
+}
+
+.nicks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    gap: clamp(10px, 2.6vw, 14px);
+}
+
+.nick {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 78px;
+    padding: 14px 12px;
+    font: inherit;
+    text-align: center;
+    background: rgba(107, 15, 42, 0.9);
+    border: 2px solid var(--rose);
+    border-radius: 14px;
+    box-shadow: 4px 4px 0 var(--frame-shadow);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.16s ease, background 0.2s ease, box-shadow 0.16s ease;
+}
+
+.nick:hover  { transform: translateY(-2px); box-shadow: 5px 6px 0 var(--frame-shadow); }
+.nick:active { transform: translateY(1px); box-shadow: 2px 2px 0 var(--frame-shadow); }
+
+/* face and text share one grid cell so they cross-fade in place */
+.nick-face,
+.nick-text,
+.nick-sub {
+    grid-area: 1 / 1;
+    transition: opacity 0.32s ease, transform 0.32s ease;
+}
+
+.nick-face { line-height: 0; opacity: 0.85; }
+.nick-face .lily-ic { width: 27px; height: 27px; }
+
+.nick-text {
+    opacity: 0;
+    transform: scale(0.88);
+    font-size: clamp(14px, 3.6vw, 16px);
+    line-height: 1.35;
+    color: var(--blush);
+}
+
+.nick.open .nick-face { opacity: 0; transform: scale(0.6); }
+.nick.open .nick-text { opacity: 1; transform: none; }
+.nick.open { background: var(--burgundy); }
+
+/* the held-back one */
+.nick--locked { border-style: dashed; }
+
+.nick-sub {
+    opacity: 0;
+    font-size: clamp(11px, 3vw, 13px);
+    color: var(--pink);
+    transform: translateY(20px);
+}
+
+.nick.teasing .nick-text { transform: translateY(-13px); }
+.nick.teasing .nick-sub  { opacity: 1; transform: translateY(14px); }
+
+.nick--locked.unlocked {
+    border-style: solid;
+    border-color: var(--pink);
+    background: var(--maroon);
+}
+
+.photo-frame--ask {
+    padding: 12px 12px 18px;
+    margin-bottom: 26px;
+    box-shadow: 6px 6px 0 var(--frame-shadow);
+}
+
+.photo-frame--ask img {
+    display: block;
+    width: 100%;
+    max-width: 330px;
+    max-height: 46vh;
+    height: auto;
+    margin: 0 auto;
+}
+
+.photo-frame--ask .photo-missing {
+    width: min(66vw, 300px);
+    height: 190px;
+    font-size: 14px;
+}
+
+/* ---------- The ask, at the end of the scroll ---------- */
+.sec-ask {
+    /* the runaway No button is positioned against this box */
+    position: relative;
+    margin-top: 96px;
+    padding-top: 48px;
+    border-top: 2px solid rgba(184, 69, 95, 0.35);
+}
+
+.ask-card {
+    display: block;
+    width: 100%;
+    padding: clamp(30px, 7vw, 44px) clamp(20px, 5vw, 30px);
+    font: inherit;
+    text-align: center;
+    background: var(--burgundy);
+    border: 3px solid var(--rose);
+    border-radius: 18px;
+    box-shadow: 9px 9px 0 var(--frame-shadow);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.ask-card:hover  { transform: translateY(-3px); box-shadow: 10px 12px 0 var(--frame-shadow); }
+.ask-card:active { transform: translateY(2px); box-shadow: 5px 5px 0 var(--frame-shadow); }
+
+.ask-card-label {
+    display: block;
+    font-size: clamp(21px, 5.4vw, 29px);
+    line-height: 1.25;
+    color: var(--blush);
+}
+
+.ask-card-sub {
+    display: block;
+    margin-top: 10px;
+    font-size: clamp(13px, 3.4vw, 15px);
+    color: var(--pink);
+}
+
+/* Deliberately NO entrance animation. This holds the actual question -- the
+   whole point of the page -- and any opacity-based animation risks leaving it
+   invisible if it doesn't run. The scroll-into-view supplies the motion. */
+.ask-body { animation: none; }
+
+.ask-kicker {
+    margin: 0 0 10px;
+    font-size: clamp(14px, 3.6vw, 17px);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--pink);
+}
+
+.ask-lead {
+    margin: 0 0 24px;
+    font-size: clamp(18px, 4.4vw, 22px);
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--blush);
+    text-wrap: balance;
+}
+
+.ask-question {
+    margin: 0 0 36px;
+    font-size: clamp(26px, 6.6vw, 40px);
+    line-height: 1.25;
+    color: var(--blush);
+    text-wrap: balance;
+}
+
+.ask-shy {
+    margin: -22px 0 26px;
+    font-size: clamp(14px, 3.6vw, 17px);
+    color: var(--pink);
+    opacity: 0.9;
+}
+
+.ask-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(20px, 6vw, 44px);
+}
+
+/* These sit on the page, not inside the window, so cq units have no
+   container to resolve against -- size them from the viewport instead. */
+.ask-buttons .btn,
+.ask-buttons .no-slot {
+    width: clamp(112px, 30vw, 168px);
+}
+
+.answered-title {
+    margin: 0 0 12px;
+    font-size: clamp(28px, 7vw, 44px);
+    line-height: 1.2;
+    color: var(--blush);
+}
+
+.answered-sub {
+    margin: 0;
+    font-size: clamp(16px, 4vw, 20px);
+    color: var(--pink);
+}
+
+/* ---------- Closing ---------- */
+.closing {
+    margin: 0;
+    font-size: clamp(22px, 6vw, 32px);
+    line-height: 1.45;
+    color: var(--blush);
+    text-wrap: balance;
+    white-space: pre-line;
+}
+
+/* ============================================================
+   Small screens
+   ============================================================ */
+@media (max-width: 560px) {
+    .letter-window { width: 96vw; }
+    h1 { font-size: 7cqw; }
+    .typed { font-size: 5cqw; }
+    .yes-sub, .next-btn { font-size: 4.3cqw; }
+    .btn, .no-slot { width: 25cqw; }
+    .photo-frame--sm img { max-width: 54cqw; }
+    .sec { margin-top: 58px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    #envelope, .hint { animation: none; }
+    .letter-window, .pane, #scene-letterpage { transition: none; animation: none; }
+    .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
 }
