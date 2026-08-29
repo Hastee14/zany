@@ -13,6 +13,13 @@ const CONFIG = {
   /* ---------- The occasion, shown above the envelope ---------- */
   occasion: "one month",
 
+  /* ---------- The lock. She has to type this to get in. ---------- */
+  password: "6767",
+  lockTitle: "this one's locked",
+  lockHint: "you know the number ❀",
+  lockButton: "open ❀",
+  lockError: "not quite. try again ❀",
+
   /* ---------- Typed before the question. One string = one line. ---------- */
   opening: [
     "One month today.",
@@ -24,12 +31,13 @@ const CONFIG = {
   askKicker: "oh — and one more thing",
   askLead: "You said I never asked you properly.",
   question: "Will you be my girlfriend?",
+  askShy: "(im shy)",
   usPhoto: "us.jpg", // a photo of the two of you
 
   /* ---------- The moment she answers ---------- */
   yesTitle: "SHE SAID YES",
-  yesSubtitle: "Properly asked. Properly answered.",
-  readButton: "there's more ♡",
+  yesSubtitle: "the love of my life, forever",
+  readButton: "there's more ❀",
 
   /* ---------- Top of the page ---------- */
   heroKicker: "one month of us",
@@ -39,25 +47,43 @@ const CONFIG = {
 
   /* ---------- Your letter (one string = one paragraph) ---------- */
   letter: [
-    "One month ago you said yes to me, and I've been quietly delighted about it every day since.",
-    "You said I never asked you properly. You were right, and it bothered me more than I let on — so I spent a while building this instead of just saying it badly again.",
-    "Write the real thing here. What changed for you this month. The small stuff you noticed. Why her, specifically.",
-    "Here's to the first of many.",
+    "One month. One month and I already know it's you. And only you 🫶",
+    "I keep thinking about it. HOW DID I GET THE ZAINAB LODHI. It's just sooo unexpected. Uni was ending and I didn't want to lose touch with anyone, so I started sending everybody reels. And I ended up sending you the AI reel about economics. I had no idea one reel would turn into hundreds and those turned into you being the person that I want to spend my lifetime with.",
+    "Talking to you felt like the easiest thing ever. We became best friends faster than anything 😭. By the first week we had a hundred inside jokes. Eating trees, commenting on Brenda's posts, making chiga language, being horses 😭. We already planned on traveling the world together in the first month of talking 😭.",
+    "You became my favorite part of the day. I looked forward to our braindead convos every single night. The random talks, the random reels the voice messages u sent me. I'd started checking my phone to see if you had texted me. And everything outside our texts started reminding me of you. Every reel (I used to save reels to send to u later 😭), songs started reminding me of you especially birds of a feather because I remember you loved that song even during exchange. EVEN TREES started reminding me of you.",
+    "I was so happy when u showed up for my birthday. I thought in my head \"MY BEST FRIEND IS HERE\". I was the happiest I've been in a long time. And I didn't know fully why. It was, being with you that made me so happy. You gave me the Lego London postcard set and it's still on my desk. Reminding me of you every single day. Each day that passed slowly started etching you into my mind. Until one day you were engraved there forever.",
+    "June felt different. UOBD extra started. Each time I saw you. I wanted another day of it. Seeing you became the thing I looked forward to more than anything else. Every love song started making sense. Every lyric felt like. It was about you. I wanted to know everything about you",
+    "July. The month i said it. Graduation. You in that blue dress. I have no words. The prettiest girl ever I was so in love 😭. July is also when you started writing. Poems about nobody asking your favorite flower, about wanting to be known. About wanting to be loved the way you never have been. I read them over and over again. I wanted to tell you. That I wanted to be the one who knows.",
+    "Then Pakistan, we both went at the same time 😭. And something felt different. The whole time we were there. I felt it every day. We would talk until the sun fully rose every day. And most nights I'd just stare lie there, staring at the fan. Wanting you. You'd tell me as well, than you were \"thinking of nothing\" or that you were sleepy. But I knew. I knew you were thinking about love. And I wanted to badly say it. \"It's me\". \"It's been me\". \"It's going to be me\". But I couldn't yet.",
+    "I left Pakistan early and you were still there. I just couldn't wait anymore. Not another day. It was going to be you. It was only ever going to be you. And I needed you to know",
+    "I was missing you and wanted to learn a song u loved and that reminded me of you on the guitar. Birds of a feather. There was no tutorial so i figured it out myself. I made my own version. And when it was finally ready. I sent it to you. The conversation after sending it was just filled with so much love. I couldn't hold it in.",
+    "July 30th I said it. My heart was beating like never before hoping for one thing. And then you said . \"Dw Hasaan I like you back\". And all the days thinking all the weight was just suddenly lifted off my chest. I read that message 50 times. It felt like a dream. You are my dream. My dream come true. I knew that I was 100% sure about you",
+    "One month later. And I still keep falling in love with you. Every single day. Loving you is the easiest thing I have done. Like breathing. Every good thing that happens. You're the first person I want to tell. Every bad thing. And anything and everything. I know I can tell you anything and I'll always love talking to you. Forever",
+    "I don't think I have stopped smiling since July 30th. I have been the happiest version of myself. Everything I do I think about you I smile. Even the songs I listen to now are all ones that remind me of you. I sit in my car and say out loud all the time. \"I love Zainab\".",
+    "I can't believe that I have the prettiest girl in the world. So pretty that Everytime I see you whether it's on your story, a picture you send me and in real life. My heart just falls in love and feels the happiest. Your smile does Something to me I don't have words for. The way your eyes squint the way you just look sooo happy. It makes the world feel lighter. It's something I would never get tired of seeing. It's my favorite.",
+    "Loving you doesn't feel like a decision I made. It feels like a fact that I had discovered. Something that was always true. It just happened to happen now. I will always love you. Every day. Every second. I will always strive to be the best for you. And I want to keep learning you. Every version of you. I want to be the person you don't have to be anything for. I want to know all the things that nobody thinks to ask. I want to keep knowing you. I have never wanted a future more than I have like the one I want with you. I need the end goal (Bluds will say anything instead of) ——-> I want to marry you. I will always love you.",
+    "Thank you for saying yes on July 30th. Thank you for being the girl I can go to about anything. Thank you for being my biggest supporter. Thank you for showing me how amazing love can be ❤️",
+    "Now every morning I get to wake up smiling and every night I get to go to sleep smiling. I will always try my best to make you smile. Always. I'm the luckiest man in the world to have you. I wake up randomly in the middle of the night smiling just thinking about you. You are the most loving person I ever know. You feel like a warm blanket was put over my soul. One month has passed. Now I want a forever. With you. And only you ❤️",
   ],
-  signoff: "— Your Name",
+  signoff: "— Hasaan",
 
   /* ---------- Photos of her, each with a title and a few lines ---------- */
-  galleryTitle: "you",
+  galleryTitle: "my zany",
   gallery: [
     {
       src: "photo1.jpg",
-      title: "She's got a smile that could light up the whole town",
-      note: "I will always love your cutie smile, the one where you squint your eyes with the dimply things. its my favorite in the whole world",
+      title: "my favourite smile",
+      note: "I will do everything to make you smile. Your cutie smile, where you squint your eyes.",
     },
     {
       src: "kid.jpg",
-      title: "the little Zany who's still in there",
-      note: "The hat. The denim vest. The Hello Kitty jeans. Fully posing for the camera like she owns the place.\n\nAnd honestly? She's still in there. Same confidence, same face when you're pleased with yourself. I'd never want you to lose her.",
+      title: "the little zany who's still there",
+      note: "Never lose the inner child that's still there. The super fun zany.\n\nSame smile then. Same smile now.",
+    },
+    {
+      src: "love.jpg",
+      title: "the love of my life",
+      note: "",
     },
     {
       src: "biceps.jpg",
@@ -73,46 +99,72 @@ const CONFIG = {
       src: "clip2.mp4",
       poster: "clip2-poster.jpg",
       title: "the first time I said I like you",
-      note: "So crazy its caugh on camera crying emoji",
+      note: "I can't believe it's on video 😭",
     },
     {
       src: "clip1.mp4",
       poster: "clip1-poster.jpg",
-      title: "the cutitiest vlog",
-      note: "I love this vlog so much",
+      title: "the cutest vlog",
+      note: "",
     },
     {
       src: "clip3.mp4",
       poster: "clip3-poster.jpg",
       title: "the best random sidequest at shams",
-      note: "bluds really pulled up to a desert to hang out",
+      note: "",
+    },
+    {
+      src: "clip4.mp4",
+      poster: "clip4-poster.jpg",
+      title: "cutieieiei coffee review",
+      note: "",
     },
   ],
 
-  /* ---------- Reasons ---------- */
+  /* ---------- Reasons. Empty list = section hidden.
+     Put entries back in here any time to bring it back.          ---------- */
   reasonsTitle: "one month, some reasons",
-  reasons: [
-    "You make ordinary days feel like something.",
-    "You laugh at my worst jokes. Even the really bad ones.",
-    "You're the first person I want to tell everything to.",
-    "You're kinder than you give yourself credit for.",
-  ],
+  reasons: [],
 
-  /* ---------- Live counter. Set startDate to the day you started. ---------- */
+  /* ---------- Live counter. Empty startDate = section hidden.
+     Put a real "YYYY-MM-DD" back here to bring the counter back.  ---------- */
   counterTitle: "us, so far",
-  startDate: "2026-07-29", // YYYY-MM-DD -- CHANGE THIS to your real date
-  counterSince: "and counting ♡",
+  startDate: "",
+  counterSince: "and counting ❀",
 
-  /* ---------- What's next ---------- */
-  futureTitle: "what's next",
-  future: [
-    "That trip we keep talking about.",
-    "Lilies, properly, not just on a website.",
-    "A hundred more ordinary Tuesdays.",
+  /* ---------- Nicknames. Each one is a hidden card she taps to reveal. ---------- */
+  nicknamesTitle: "what I love calling you",
+  nicknamesHint: "tap them ❀",
+  nicknames: [
+    "my zany",
+    "my love",
+    "my heart",
+    "my soul",
+    "my home",
+    "my dream",
+    "my everything",
+    "my peace",
+    "my strength",
+    "my biggest supporter",
+    "my pretty",
+    "my forever",
+    "the love of my life",
+    "the girl of my dreams",
+    "my true love",
+    "my cutie",
   ],
+
+  /* The one held back. Locked until she answers the question. */
+  lockedNickname: "my girl. forever.",
+  lockedTeaser: "not unlocked yet ❀",
+  lockedHint: "scroll down",
+
+  /* The ask sits behind a card she has to open. */
+  askCardLabel: "one more thing ❀",
+  askCardSub: "tap to open",
 
   /* ---------- The last thing she reads ---------- */
-  closing: "One month down.\nForever to go.",
+  closing: "we have a forever to live together",
 
   /* ---------- Music: your mp3, in this folder ---------- */
   song: "song.mp3",
@@ -122,16 +174,12 @@ const CONFIG = {
 /* ============================================================================
    Elements
    ============================================================================ */
-const envelopeScene = document.getElementById("scene-envelope");
-const windowScene = document.getElementById("scene-window");
+const lockScene = document.getElementById("scene-lock");
 const letterPage = document.getElementById("scene-letterpage");
-const letterWindow = document.getElementById("letter-window");
 
-const typedText = document.getElementById("typed-text");
 const askQuestion = document.getElementById("ask-question");
 const yesBtn = document.getElementById("yes-btn");
 const noBtn = document.getElementById("no-btn");
-const openPageBtn = document.getElementById("open-page");
 
 const song = document.getElementById("song");
 const musicToggle = document.getElementById("music-toggle");
@@ -139,7 +187,12 @@ const musicToggle = document.getElementById("music-toggle");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const setText = (id, value) => {
-  document.getElementById(id).textContent = value || "";
+  const el = document.getElementById(id);
+  // Guard: a stale id must not throw here. This runs at the top level, so one
+  // missing element would kill every line below it -- sections, photos, the
+  // lock, all of it. Twice now that's exactly what happened.
+  if (!el) return;
+  el.textContent = value || "";
 };
 
 /* ============================================================================
@@ -149,10 +202,12 @@ askQuestion.textContent = CONFIG.question;
 setText("ask-kicker", CONFIG.askKicker);
 setText("ask-lead", CONFIG.askLead);
 setText("occasion-label", CONFIG.occasion);
+setText("lock-title", CONFIG.lockTitle);
+setText("lock-hint", CONFIG.lockHint);
+setText("lock-error", CONFIG.lockError);
 setText("hero-kicker", CONFIG.heroKicker);
 setText("yes-title", CONFIG.yesTitle);
 setText("yes-subtitle", CONFIG.yesSubtitle);
-setText("open-page", CONFIG.readButton);
 setText("page-title", CONFIG.pageTitle);
 setText("her-caption", CONFIG.herCaption);
 setText("signoff", CONFIG.signoff);
@@ -323,18 +378,6 @@ buildSection("sec-reasons", "reasons-title", CONFIG.reasonsTitle, CONFIG.reasons
   reasonsList.appendChild(li);
 });
 
-// --- What's next ---
-const futureList = document.getElementById("future-list");
-
-buildSection("sec-future", "future-title", CONFIG.futureTitle, CONFIG.future, (text) => {
-  const li = document.createElement("li");
-  li.className = "reveal";
-  const span = document.createElement("span");
-  span.textContent = text;
-  li.appendChild(span);
-  futureList.appendChild(li);
-});
-
 // --- Closing ---
 // The closing line and the answer both stay hidden until she says yes.
 if (CONFIG.closing) setText("closing-text", CONFIG.closing);
@@ -493,7 +536,7 @@ const PETAL_COLORS = ["#f2c3ce", "#e28fa0", "#f7d3db", "#d98fa2"];
 const hearts = [];
 
 function spawnHeart(fromBottom = true) {
-  const isPetal = Math.random() < 0.6;
+  const isPetal = true; // lily petals only -- the hearts are retired
   hearts.push({
     isPetal,
     x: Math.random() * vw,
@@ -613,128 +656,261 @@ function loop() {
 
 if (!reduceMotion) loop();
 
+
 /* ============================================================================
-   Typewriter — one line, then straight to the question
+   The ❀ marks in your text become small coloured lilies
    ============================================================================ */
-let skipTyping = false;
+const LILY_ICON =
+  '<svg class="lily-ic" viewBox="-60 -60 120 120" aria-hidden="true"><g transform="rotate(0) scale(1)"><path d="M0,-3 C7,-12 14,-19 13,-31 C12,-42 7,-49 0,-55 C-7,-49 -12,-42 -13,-31 C-14,-19 -7,-12 0,-3 Z" fill="#d4718a"/><path d="M0,-10 L0,-46" stroke="#eda6b8" stroke-width="3" opacity=".75"/></g><g transform="rotate(60) scale(.88)"><path d="M0,-3 C7,-12 14,-19 13,-31 C12,-42 7,-49 0,-55 C-7,-49 -12,-42 -13,-31 C-14,-19 -7,-12 0,-3 Z" fill="#d4718a"/><path d="M0,-10 L0,-46" stroke="#eda6b8" stroke-width="3" opacity=".75"/></g><g transform="rotate(120) scale(1)"><path d="M0,-3 C7,-12 14,-19 13,-31 C12,-42 7,-49 0,-55 C-7,-49 -12,-42 -13,-31 C-14,-19 -7,-12 0,-3 Z" fill="#d4718a"/><path d="M0,-10 L0,-46" stroke="#eda6b8" stroke-width="3" opacity=".75"/></g><g transform="rotate(180) scale(.88)"><path d="M0,-3 C7,-12 14,-19 13,-31 C12,-42 7,-49 0,-55 C-7,-49 -12,-42 -13,-31 C-14,-19 -7,-12 0,-3 Z" fill="#d4718a"/><path d="M0,-10 L0,-46" stroke="#eda6b8" stroke-width="3" opacity=".75"/></g><g transform="rotate(240) scale(1)"><path d="M0,-3 C7,-12 14,-19 13,-31 C12,-42 7,-49 0,-55 C-7,-49 -12,-42 -13,-31 C-14,-19 -7,-12 0,-3 Z" fill="#d4718a"/><path d="M0,-10 L0,-46" stroke="#eda6b8" stroke-width="3" opacity=".75"/></g><g transform="rotate(300) scale(.88)"><path d="M0,-3 C7,-12 14,-19 13,-31 C12,-42 7,-49 0,-55 C-7,-49 -12,-42 -13,-31 C-14,-19 -7,-12 0,-3 Z" fill="#d4718a"/><path d="M0,-10 L0,-46" stroke="#eda6b8" stroke-width="3" opacity=".75"/></g><circle r="7" fill="#8e2a45"/><circle r="3.2" fill="#e8c25a"/></svg>';
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+function renderLilies(el) {
+  if (!el) return;
+  const text = el.textContent;
+  if (text.indexOf("\u2740") === -1) return;
 
-function typeLine(line, speed = 45) {
-  return new Promise((resolve) => {
-    // Whatever is already typed stays put; this line is added onto it.
-    const base = typedText.textContent;
-
-    if (reduceMotion) {
-      typedText.textContent = base + line;
-      resolve();
-      return;
+  el.textContent = "";
+  text.split("\u2740").forEach((part, i, all) => {
+    if (part) el.appendChild(document.createTextNode(part));
+    if (i < all.length - 1) {
+      const span = document.createElement("span");
+      span.className = "lily-ic-wrap";
+      span.innerHTML = LILY_ICON;
+      el.appendChild(span);
     }
-
-    let i = 0;
-    const tick = () => {
-      if (skipTyping) {
-        typedText.textContent = base + line;
-        resolve();
-        return;
-      }
-      typedText.textContent = base + line.slice(0, i + 1);
-      i++;
-      if (i < line.length) {
-        const ch = line[i - 1];
-        setTimeout(tick, ",.!?—".includes(ch) ? speed * 6 : speed);
-      } else {
-        resolve();
-      }
-    };
-    tick();
   });
 }
 
-async function runIntro() {
-  typedText.textContent = "";
-  typedText.classList.remove("done");
+["lock-title", "lock-hint", "lock-error", "counter-since", "closing-text"].forEach(
+  (id) => renderLilies(document.getElementById(id))
+);
+document.querySelectorAll(".page-foot, .card-title, .card-note").forEach(renderLilies);
 
-  const lines = Array.isArray(CONFIG.opening) ? CONFIG.opening : [CONFIG.opening];
+/* ============================================================================
+   Nicknames -- hidden cards she taps to turn over
+   ============================================================================ */
+const nicksGrid = document.getElementById("nicks-grid");
 
-  for (let i = 0; i < lines.length; i++) {
-    skipTyping = false; // a tap skips the current line, not the whole intro
-    await typeLine(lines[i]);
-    if (i < lines.length - 1) {
-      typedText.textContent += "\n";
-      await sleep(reduceMotion ? 0 : 420);
-    }
-  }
+function makeNick(text, extraClass) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "nick reveal" + (extraClass ? " " + extraClass : "");
 
-  typedText.classList.add("done");
-  openPageBtn.hidden = false;
+  const face = document.createElement("span");
+  face.className = "nick-face";
+  face.innerHTML = LILY_ICON;
+
+  const label = document.createElement("span");
+  label.className = "nick-text";
+  label.textContent = text;
+
+  btn.appendChild(face);
+  btn.appendChild(label);
+  nicksGrid.appendChild(btn);
+  return btn;
 }
 
-document.getElementById("pane-intro").addEventListener("click", () => {
-  if (!typedText.classList.contains("done")) skipTyping = true;
+let lockedNick = null;
+
+if ((CONFIG.nicknames || []).length) {
+  setText("nicknames-title", CONFIG.nicknamesTitle);
+  setText("nicknames-hint", CONFIG.nicknamesHint);
+  renderLilies(document.getElementById("nicknames-hint"));
+
+  CONFIG.nicknames.forEach((name) => {
+    const card = makeNick(name);
+    card.addEventListener("click", () => card.classList.add("open"));
+  });
+
+  // the one saved for last
+  if (CONFIG.lockedNickname) {
+    lockedNick = makeNick(CONFIG.lockedTeaser, "nick--locked");
+    const label = lockedNick.querySelector(".nick-text");
+    renderLilies(label);
+
+    const sub = document.createElement("span");
+    sub.className = "nick-sub";
+    sub.textContent = CONFIG.lockedHint;
+    lockedNick.appendChild(sub);
+
+    lockedNick.addEventListener("click", () => {
+      if (lockedNick.classList.contains("unlocked")) return;
+      lockedNick.classList.add("open", "teasing");
+    });
+  }
+
+  document.getElementById("sec-nicknames").hidden = false;
+}
+
+function unlockNickname() {
+  if (!lockedNick) return;
+  lockedNick.classList.remove("teasing");
+  lockedNick.classList.add("open", "unlocked");
+  const label = lockedNick.querySelector(".nick-text");
+  label.textContent = CONFIG.lockedNickname;
+  renderLilies(label);
+  const sub = lockedNick.querySelector(".nick-sub");
+  if (sub) sub.remove();
+}
+
+/* ============================================================================
+   The ask, behind a card she opens
+   ============================================================================ */
+const askCard = document.getElementById("ask-card");
+const askBody = document.getElementById("ask-body");
+
+setText("ask-card-label", CONFIG.askCardLabel);
+setText("ask-card-sub", CONFIG.askCardSub);
+renderLilies(document.getElementById("ask-card-label"));
+setText("ask-shy", CONFIG.askShy);
+
+askCard.addEventListener("click", () => {
+  askCard.hidden = true;
+  askBody.hidden = false;
+  askBody.scrollIntoView({
+    behavior: reduceMotion ? "auto" : "smooth",
+    block: "center",
+  });
 });
 
 /* ============================================================================
-   Envelope → window
+   Unlock -> straight to the page
    ============================================================================ */
 let opened = false;
 
-envelopeScene.addEventListener("click", () => {
+function openLetter() {
   if (opened) return;
   opened = true;
 
   startMusic();
-  heartRate = 0.6;
+  heartRate = 0.5;
 
-  envelopeScene.classList.remove("is-active");
-  windowScene.classList.add("is-active");
+  lockScene.classList.remove("is-active");
+  lockScene.classList.remove("leaving");
+  document.body.classList.add("reading");
+  letterPage.classList.add("is-active");
+  window.scrollTo(0, 0);
+  setupReveal();
+}
 
-  // Force a layout pass so the window has a starting point to animate FROM.
-  // (requestAnimationFrame would do this too, but it doesn't fire while the
-  // tab is hidden -- glance away mid-open and you'd come back to a blank box.)
-  void letterWindow.offsetWidth;
+const lockError = document.getElementById("lock-error");
 
-  letterWindow.classList.add("open");
-  setTimeout(runIntro, reduceMotion ? 0 : 550);
+const pinDots = document.querySelectorAll("#pin-dots .pin-dot");
+const lockCard = document.getElementById("lock-card");
+const keypad = document.getElementById("keypad");
+const PIN_LENGTH = pinDots.length;
+
+let pin = "";
+
+function paintDots() {
+  pinDots.forEach((dot, i) => dot.classList.toggle("filled", i < pin.length));
+}
+
+function wrongPin() {
+  lockError.hidden = false;
+  lockCard.classList.remove("shake");
+  void lockCard.offsetWidth; // restart the animation
+  lockCard.classList.add("shake");
+
+  setTimeout(() => {
+    pin = "";
+    paintDots();
+  }, 380);
+}
+
+function pressKey(key) {
+  if (locking) return;
+
+  if (key === "del") {
+    pin = pin.slice(0, -1);
+    lockError.hidden = true;
+    paintDots();
+    return;
+  }
+
+  if (!/^[0-9]$/.test(key) || pin.length >= PIN_LENGTH) return;
+
+  pin += key;
+  lockError.hidden = true;
+  paintDots();
+
+  if (pin.length < PIN_LENGTH) return;
+
+  if (pin === String(CONFIG.password)) {
+    locking = true;
+    lockCard.classList.add("unlocked");
+    setTimeout(openLetter, reduceMotion ? 0 : 420);
+  } else {
+    wrongPin();
+  }
+}
+
+let locking = false;
+
+// tapping the on-screen pad
+keypad.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-key]");
+  if (btn) pressKey(btn.dataset.key);
 });
+
+// and a real keyboard, for when she's on a laptop
+document.addEventListener("keydown", (e) => {
+  if (opened) return;
+  if (e.key === "Backspace") {
+    e.preventDefault();
+    pressKey("del");
+  } else if (/^[0-9]$/.test(e.key)) {
+    pressKey(e.key);
+  }
+});
+
+paintDots();
 
 /* ============================================================================
    The No button runs away — on mouse AND on touch
    ============================================================================ */
 let noEscaped = false;
+const askSection = document.getElementById("sec-ask");
 
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
 function dodgeNo() {
+  const zone = askSection.getBoundingClientRect();
   const r = noBtn.getBoundingClientRect();
 
+  // First dodge: pop it out of the layout, but ANCHORED TO THE ASK SECTION,
+  // not the viewport. Fixed positioning let it teleport to the top of the
+  // screen while she was reading the question at the bottom of the page.
   if (!noEscaped) {
     noBtn.style.width = r.width + "px";
     noBtn.style.height = r.height + "px";
-    noBtn.style.position = "fixed";
+    noBtn.style.position = "absolute";
     noBtn.style.margin = "0";
-    noBtn.style.left = r.left + "px";
-    noBtn.style.top = r.top + "px";
+    noBtn.style.left = r.left - zone.left + "px";
+    noBtn.style.top = r.top - zone.top + "px";
     noEscaped = true;
     void noBtn.offsetWidth;
   }
 
-  const pad = 10;
-  const maxLeft = Math.max(pad, vw - r.width - pad);
-  const maxTop = Math.max(pad, vh - r.height - pad);
+  const pad = 8;
+  const maxLeft = Math.max(pad, zone.width - r.width - pad);
+  const maxTop = Math.max(pad, zone.height - r.height - pad);
 
-  let left = 0;
-  let top = 0;
+  const curLeft = parseFloat(noBtn.style.left) || 0;
+  const curTop = parseFloat(noBtn.style.top) || 0;
 
-  for (let tries = 0; tries < 12; tries++) {
+  let left = curLeft;
+  let top = curTop;
+
+  for (let tries = 0; tries < 14; tries++) {
     const angle = Math.random() * Math.PI * 2;
-    const dist = 150 + Math.random() * 280;
-    left = clamp(r.left + Math.cos(angle) * dist, pad, maxLeft);
-    top = clamp(r.top + Math.sin(angle) * dist, pad, maxTop);
-    if (Math.hypot(left - r.left, top - r.top) > 90) break;
+    const dist = 90 + Math.random() * 180;
+    left = clamp(curLeft + Math.cos(angle) * dist, pad, maxLeft);
+    top = clamp(curTop + Math.sin(angle) * dist, pad, maxTop);
+    if (Math.hypot(left - curLeft, top - curTop) > 70) break;
   }
 
-  if (Math.hypot(left - r.left, top - r.top) <= 90) {
+  // cornered? hop anywhere inside the section
+  if (Math.hypot(left - curLeft, top - curTop) <= 70) {
     left = pad + Math.random() * (maxLeft - pad);
     top = pad + Math.random() * (maxTop - pad);
   }
@@ -748,6 +924,7 @@ noBtn.addEventListener("pointerenter", (e) => {
   if (e.pointerType !== "touch") dodgeNo();
 });
 
+// touch (and stubborn clickers) never get to land the hit
 noBtn.addEventListener("pointerdown", (e) => {
   e.preventDefault();
   dodgeNo();
@@ -758,12 +935,18 @@ noBtn.addEventListener("click", (e) => {
   dodgeNo();
 });
 
+// keep it inside the section if the window resizes
 window.addEventListener("resize", () => {
   if (!noEscaped) return;
+  const zone = askSection.getBoundingClientRect();
   const r = noBtn.getBoundingClientRect();
-  noBtn.style.left = clamp(r.left, 10, Math.max(10, vw - r.width - 10)) + "px";
-  noBtn.style.top = clamp(r.top, 10, Math.max(10, vh - r.height - 10)) + "px";
+  const pad = 8;
+  noBtn.style.left =
+    clamp(parseFloat(noBtn.style.left) || 0, pad, Math.max(pad, zone.width - r.width - pad)) + "px";
+  noBtn.style.top =
+    clamp(parseFloat(noBtn.style.top) || 0, pad, Math.max(pad, zone.height - r.height - pad)) + "px";
 });
+
 
 /* ============================================================================
    YES
@@ -775,6 +958,7 @@ yesBtn.addEventListener("click", () => {
 
   // Swap the ask out for the answer, then the closing line beneath it.
   document.getElementById("sec-ask").hidden = true;
+  unlockNickname();
   const answered = document.getElementById("sec-answered");
   answered.hidden = false;
   if (CONFIG.closing) document.getElementById("sec-closing").hidden = false;
@@ -798,30 +982,6 @@ yesBtn.addEventListener("click", () => {
   setTimeout(() => {
     heartRate = 0.7;
   }, 6000);
-});
-
-/* ============================================================================
-   → the scrolling page
-   ============================================================================ */
-openPageBtn.addEventListener("click", () => {
-  letterWindow.classList.add("dismiss");
-
-  // Clear any confetti still in the air -- it sits on a canvas above the
-  // page and would drift over the letter while she's trying to read it.
-  celebrating = false;
-  confetti.length = 0;
-  heartRate = 0.4;
-
-  setTimeout(
-    () => {
-      windowScene.classList.remove("is-active");
-      document.body.classList.add("reading");
-      letterPage.classList.add("is-active");
-      window.scrollTo(0, 0);
-      setupReveal();
-    },
-    reduceMotion ? 0 : 500
-  );
 });
 
 /* ============================================================================
