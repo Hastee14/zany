@@ -155,7 +155,7 @@ const CONFIG = {
   ],
 
   /* The one held back. Locked until she answers the question. */
-  lockedNickname: "my girl. forever.",
+  lockedNickname: "my girlfriend",
   lockedTeaser: "not unlocked yet ❀",
   lockedHint: "scroll down",
 
