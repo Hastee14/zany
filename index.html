@@ -8,10 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Silkscreen:wght@400;700&family=VT323&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=46" />
+    <link rel="stylesheet" href="style.css?v=48" />
   </head>
 
   <body>
@@ -140,14 +140,14 @@
         <header class="hero">
           <p class="m2-kicker reveal" id="m2-kicker"></p>
           <h1 class="m2-title reveal" id="m2-title"></h1>
-          <div class="m2-stars reveal" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
         </header>
 
-        <article class="letter-paper m2-paper reveal" id="m2-letter">
-          <div id="m2-body"></div>
-          <p class="signoff m2-signoff" id="m2-signoff"></p>
+        <article class="m2-book reveal" id="m2-letter">
+          <span class="m2-ribbon" aria-hidden="true"></span>
+          <div class="m2-pages">
+            <div id="m2-body"></div>
+            <p class="m2-signoff" id="m2-signoff"></p>
+          </div>
         </article>
 
         <section class="sec">
@@ -159,16 +159,12 @@
             <figcaption class="m2-caption" id="m2-caption"></figcaption>
           </figure>
         </section>
-
-        <section class="sec">
-          <p class="closing m2-closing reveal" id="m2-closing"></p>
-        </section>
       </div>
     </section>
 
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
     <audio id="song" loop preload="auto"></audio>
-    <script src="script.js?v=46"></script>
+    <script src="script.js?v=48"></script>
   </body>
 </html>

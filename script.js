@@ -31,7 +31,7 @@ const MONTH2 = {
   lockHint: "same number ❀",
   lockError: "not quite. try again ❀",
 
-  heroKicker: "two months of us",
+  heroKicker: "chapter two",
   pageTitle: "Happy 2 months, Zany",
   photo: "us2.jpg",
   caption: "my girlfriend 🫶",
@@ -49,7 +49,6 @@ const MONTH2 = {
     "I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU  I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU  I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU  I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU   I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU ❤️❤️❤️❤️❤️❤️❤️❤️",
   ],
   signoff: "— Hissy",
-  closing: "and a forever still to go",
 };
 
 const CONFIG = {
@@ -264,7 +263,6 @@ setText("m2-kicker", MONTH2.heroKicker);
 setText("m2-title", MONTH2.pageTitle);
 setText("m2-caption", MONTH2.caption);
 setText("m2-signoff", MONTH2.signoff);
-setText("m2-closing", MONTH2.closing);
 
 const m2Body = document.getElementById("m2-body");
 (MONTH2.letter || []).forEach((para) => {
@@ -586,33 +584,14 @@ function petalPath(ctx, s) {
   ctx.closePath();
 }
 
-// A four-point sparkle, for month two's night sky.
-function starPath(ctx, s) {
-  const o = s / 2;
-  const i = s * 0.14;
-  ctx.beginPath();
-  ctx.moveTo(0, -o);
-  ctx.quadraticCurveTo(i, -i, o, 0);
-  ctx.quadraticCurveTo(i, i, 0, o);
-  ctx.quadraticCurveTo(-i, i, -o, 0);
-  ctx.quadraticCurveTo(-i, -i, 0, -o);
-  ctx.closePath();
-}
-
 const HEART_COLORS = ["#6b0f2a", "#8a2433", "#b8455f", "#a3324a"];
 const PETAL_COLORS = ["#f2c3ce", "#e28fa0", "#f7d3db", "#d98fa2"];
-const STAR_COLORS = ["#ffd97a", "#fff3c9", "#b9aef5", "#8f7fe8"];
 const hearts = [];
 
-// "petal" for month one, "star" for month two
-let particleMode = "petal";
-
 function spawnHeart(fromBottom = true) {
-  const isStar = particleMode === "star";
-  const isPetal = !isStar; // lily petals only -- the hearts are retired
+  const isPetal = true; // lily petals only -- the hearts are retired
   hearts.push({
     isPetal,
-    isStar,
     x: Math.random() * vw,
     y: fromBottom ? vh + 40 : Math.random() * vh,
     size: isPetal ? 14 + Math.random() * 26 : 10 + Math.random() * 20,
@@ -622,18 +601,10 @@ function spawnHeart(fromBottom = true) {
     alpha: 0.25 + Math.random() * 0.4,
     spin: (Math.random() - 0.5) * 0.01,
     rot: (Math.random() - 0.5) * 0.5,
-    color: isStar
-      ? STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0]
-      : PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0],
+    color: isPetal
+      ? PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0]
+      : HEART_COLORS[(Math.random() * HEART_COLORS.length) | 0],
   });
-}
-
-// Swap what falls, and restock so the change is immediate.
-function setParticles(mode) {
-  if (particleMode === mode) return;
-  particleMode = mode;
-  hearts.length = 0;
-  for (let i = 0; i < 22; i++) spawnHeart(false);
 }
 
 for (let i = 0; i < 18; i++) spawnHeart(false);
@@ -658,15 +629,11 @@ function updateHearts() {
     }
 
     hCtx.save();
-    hCtx.globalAlpha = p.isStar
-      ? p.alpha * (0.45 + 0.55 * Math.abs(Math.sin(p.phase * 1.7)))
-      : p.alpha;
+    hCtx.globalAlpha = p.alpha;
     hCtx.translate(p.x, p.y);
     hCtx.rotate(p.rot);
     hCtx.fillStyle = p.color;
-    if (p.isStar) {
-      starPath(hCtx, p.size);
-    } else if (p.isPetal) {
+    if (p.isPetal) {
       petalPath(hCtx, p.size);
     } else {
       heartPath(hCtx, 0, -p.size / 2, p.size);
@@ -876,7 +843,6 @@ const LETTERS = {
     song: CONFIG.song,
     songStart: CONFIG.songStart,
     bodyClass: "reading",
-    particles: "petal",
   },
   m2: {
     password: MONTH2.password,
@@ -888,7 +854,6 @@ const LETTERS = {
     song: MONTH2.song,
     songStart: MONTH2.songStart,
     bodyClass: "reading reading-m2",
-    particles: "star",
   },
 };
 
@@ -970,7 +935,6 @@ function openLetter() {
   opened = true;
 
   startMusic(active.song, active.songStart);
-  setParticles(active.particles);
   heartRate = 0.5;
 
   document.body.classList.add(...active.bodyClass.split(" "));

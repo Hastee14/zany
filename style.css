@@ -1113,114 +1113,146 @@ video:-webkit-full-screen::backdrop {
 }
 
 /* ============================================================
-   MONTH TWO — same pixel world as month one, at night.
-   Everything month one does (petals, reveals, hard offset
-   shadows, chunky borders) it does too; the palette is midnight
-   and gold instead of burgundy and rose, and the type changes.
+   MONTH TWO — a book, because she reads.
+   Same world as month one: lilies, falling petals, reveals.
+   Deeper maroon ground, pinker accents, and the letter is an
+   open book with blush pages instead of a dark card.
    ============================================================ */
 :root {
-    --m2-night:  #16123a;
-    --m2-deep:   #241d5c;
-    --m2-edge:   #5344b5;
-    --m2-star:   #ffd97a;
-    --m2-soft:   #cdc7f7;
-    --m2-bright: #f4f1ff;
-    --m2-shadow: rgba(4, 2, 22, 0.55);
+    --m2-ground: #4d0f22;
+    --m2-cover:  #7c1c34;
+    --m2-cover-2:#611427;
+    --m2-page:   #fdeef1;
+    --m2-page-2: #f6dbe2;
+    --m2-ink:    #5a0d22;
+    --m2-ink-soft: #94566a;
+    --m2-pink:   #e892a6;
+    --m2-shadow: rgba(30, 3, 14, 0.5);
 }
 
 body.reading-m2 {
-    background: var(--m2-night) url("lily-bg.svg") repeat;
+    background: var(--m2-ground) url("lily-bg.svg") repeat;
     background-size: 440px 440px;
 }
 
-/* the lily tile is pink; at night it should read as faint constellations */
-body.reading-m2::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: var(--m2-night);
-    opacity: 0.72;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.page.m2 { position: relative; z-index: 10; }
-
 /* ---------- Hero ---------- */
 .m2-kicker {
-    margin: 0 0 14px;
-    font-family: "Silkscreen", "Pixelify Sans", monospace;
-    font-size: clamp(11px, 2.9vw, 14px);
-    letter-spacing: 2px;
-    color: var(--m2-star);
+    margin: 0 0 8px;
+    font-size: clamp(14px, 3.6vw, 18px);
+    letter-spacing: 3px;
+    color: var(--m2-pink);
 }
 
 .m2-title {
     margin: 0;
-    font-family: "Silkscreen", "Pixelify Sans", monospace;
-    font-weight: 700;
-    font-size: clamp(22px, 5.6vw, 36px);
-    line-height: 1.45;
-    color: var(--m2-bright);
-    text-shadow: 3px 3px 0 var(--m2-deep), 6px 6px 0 var(--m2-shadow);
+    font-size: clamp(28px, 7vw, 44px);
+    line-height: 1.25;
+    color: var(--blush);
 }
 
-/* a little row of stars that twinkle out of step */
-.m2-stars {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin: 26px 0 0;
-}
-
-.m2-stars span {
-    width: 10px;
-    height: 10px;
-    background: var(--m2-star);
-    clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
-    animation: m2Twinkle 2.4s ease-in-out infinite;
-}
-
-.m2-stars span:nth-child(2) { animation-delay: 0.4s; }
-.m2-stars span:nth-child(3) { animation-delay: 0.8s; }
-.m2-stars span:nth-child(4) { animation-delay: 1.2s; }
-.m2-stars span:nth-child(5) { animation-delay: 1.6s; }
-
-@keyframes m2Twinkle {
-    0%, 100% { opacity: 0.25; transform: scale(0.8); }
-    50%      { opacity: 1;    transform: scale(1.25); }
-}
-
-/* ---------- The letter: month one's card, at night ---------- */
-.m2-paper {
-    margin-top: 40px;
-    background: var(--m2-deep);
-    border-color: var(--m2-edge);
+/* ---------- The book ---------- */
+.m2-book {
+    position: relative;
+    margin-top: 46px;
+    padding: 14px 14px 14px 26px;
+    background: linear-gradient(90deg, var(--m2-cover-2) 0 16px, var(--m2-cover) 16px);
+    border: 3px solid var(--m2-pink);
+    border-radius: 6px 14px 14px 6px;
     box-shadow: 8px 8px 0 var(--m2-shadow);
-    color: var(--m2-soft);
+    text-align: left;
 }
 
-.m2-paper p {
-    font-family: "VT323", "Pixelify Sans", monospace;
-    font-size: clamp(19px, 4.7vw, 22px);
-    line-height: 1.7;
-    letter-spacing: 0.3px;
+/* stitching down the spine */
+.m2-book::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    bottom: 18px;
+    left: 9px;
+    width: 2px;
+    background: repeating-linear-gradient(
+        180deg,
+        var(--m2-pink) 0 7px,
+        transparent 7px 15px
+    );
+    opacity: 0.6;
+}
+
+/* the block of page edges, stacked on the outer side */
+.m2-book::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    right: -9px;
+    width: 9px;
+    border-radius: 0 4px 4px 0;
+    background: repeating-linear-gradient(
+        180deg,
+        var(--m2-page) 0 3px,
+        var(--m2-page-2) 3px 6px
+    );
+    box-shadow: 3px 3px 0 var(--m2-shadow);
+}
+
+.m2-ribbon {
+    position: absolute;
+    top: -3px;
+    right: 34px;
+    width: 16px;
+    height: 58px;
+    background: var(--m2-pink);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+    box-shadow: 2px 2px 0 var(--m2-shadow);
+}
+
+/* ---------- The pages inside it ---------- */
+.m2-pages {
+    padding: clamp(26px, 6vw, 42px) clamp(22px, 5.5vw, 38px);
+    background: var(--m2-page);
+    border-radius: 3px;
+    color: var(--m2-ink);
+    /* the faint gutter shadow where a real page meets the spine */
+    box-shadow: inset 14px 0 18px -14px rgba(90, 13, 34, 0.45);
+}
+
+.m2-pages p {
+    margin: 0 0 1.15em;
+    font-family: "Crimson Pro", Georgia, serif;
+    font-size: clamp(18px, 4.4vw, 20px);
+    line-height: 1.72;
+}
+
+.m2-pages p:last-of-type { margin-bottom: 0; }
+
+/* a proper opening initial, like a printed chapter */
+#m2-body p:first-child::first-letter {
+    float: left;
+    margin: 0.06em 0.09em 0 0;
+    font-family: "Crimson Pro", Georgia, serif;
+    font-weight: 600;
+    font-size: 3.3em;
+    line-height: 0.78;
+    color: var(--m2-cover);
 }
 
 .m2-signoff {
-    font-family: "Silkscreen", "Pixelify Sans", monospace;
-    font-size: clamp(13px, 3.2vw, 16px);
-    color: var(--m2-star) !important;
+    margin-top: 1.5em !important;
+    text-align: right;
+    font-family: "Crimson Pro", Georgia, serif;
+    font-style: italic;
+    font-size: clamp(19px, 4.6vw, 22px);
+    color: var(--m2-ink-soft) !important;
 }
 
-/* ---------- The photo, after the letter ---------- */
+/* ---------- The photo, after the book ---------- */
 .m2-figure { margin: 0; }
 
 .m2-photo {
-    background: var(--m2-deep);
-    border: 3px solid var(--m2-edge);
+    background: var(--m2-page);
+    border: 3px solid var(--m2-pink);
     box-shadow: 8px 8px 0 var(--m2-shadow);
-    padding: 12px 12px 12px;
+    padding: 12px;
     max-width: 100%;
 }
 
@@ -1241,20 +1273,6 @@ body.reading-m2::before {
 
 .m2-caption {
     margin: 20px 0 0;
-    font-family: "Silkscreen", "Pixelify Sans", monospace;
-    font-size: clamp(12px, 3.1vw, 15px);
-    line-height: 1.7;
-    color: var(--m2-star);
-}
-
-.m2-closing {
-    font-family: "Silkscreen", "Pixelify Sans", monospace;
-    font-size: clamp(15px, 3.8vw, 22px);
-    line-height: 1.7;
-    color: var(--m2-bright);
-    text-shadow: 2px 2px 0 var(--m2-shadow);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .m2-stars span { animation: none; opacity: 0.9; }
+    font-size: clamp(16px, 4vw, 20px);
+    color: var(--m2-pink);
 }
