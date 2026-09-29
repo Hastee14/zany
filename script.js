@@ -37,6 +37,8 @@ const MONTH2 = {
   caption: "my girlfriend 🫶",
 
   song: "song2.mp3",
+  songStart: 69, // 1:09 -- skip the intro
+
 
   letter: [
     "HI ZANYYY MERI JAAN. Wow it's been 2 months of us. 1 month of being bf and gf 😛. I just want to say these past 2 months have been the most amazing cutest best 2 months of my life. 2 months with the most amazing, the most special, and my favorite girl in the universe. AAAA MY GIRLFRIEND YAYAYAYAYAYAYAYAY 🫶🫶",
@@ -841,6 +843,7 @@ const LETTERS = {
     lockError: CONFIG.lockError,
     scene: letterPage,
     song: CONFIG.song,
+    songStart: CONFIG.songStart,
     bodyClass: "reading",
   },
   m2: {
@@ -851,6 +854,7 @@ const LETTERS = {
     lockError: MONTH2.lockError,
     scene: month2Page,
     song: MONTH2.song,
+    songStart: MONTH2.songStart,
     bodyClass: "reading reading-m2",
   },
 };
@@ -932,7 +936,7 @@ function openLetter() {
   if (opened || !active) return;
   opened = true;
 
-  startMusic(active.song);
+  startMusic(active.song, active.songStart);
   heartRate = 0.5;
 
   document.body.classList.add(...active.bodyClass.split(" "));
@@ -1138,12 +1142,41 @@ yesBtn.addEventListener("click", () => {
    ============================================================================ */
 let songWanted = false; // has she left the music switched on?
 
-function startMusic(src) {
+let songStart = 0; // where this track comes in, in seconds
+
+// <audio loop> always wraps back to 0, so a track with an offset has to be
+// nudged forward again each time round.
+song.addEventListener("timeupdate", () => {
+  if (songStart && song.currentTime < songStart - 0.5) {
+    try {
+      song.currentTime = songStart;
+    } catch (e) {
+      /* not seekable yet -- the next timeupdate will catch it */
+    }
+  }
+});
+
+function startMusic(src, startAt) {
   const track = src || CONFIG.song;
   if (!track) return;
 
+  songStart = Number(startAt) || 0;
+
   song.src = track;
   song.volume = 0;
+
+  // currentTime only sticks once the browser knows how long the file is
+  if (songStart) {
+    const seekToStart = () => {
+      try {
+        if (song.currentTime < songStart) song.currentTime = songStart;
+      } catch (e) {
+        /* ignore -- timeupdate will move it */
+      }
+    };
+    song.addEventListener("loadedmetadata", seekToStart, { once: true });
+    song.addEventListener("canplay", seekToStart, { once: true });
+  }
 
   song
     .play()
