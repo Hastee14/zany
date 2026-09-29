@@ -1111,3 +1111,189 @@ video:-webkit-full-screen::backdrop {
     .shelf-hint { animation: none; opacity: 0.8; }
     .shelf-card { transition: none; }
 }
+
+/* ============================================================
+   MONTH TWO — daybreak.
+   Deliberately unlike month one: no pixel face, no hard offset
+   shadows, light instead of dark. The letter's own images are
+   sky, sun and moon, so the page is the sunrise they used to
+   talk through.
+   ============================================================ */
+:root {
+    --m2-night:  #221d47;
+    --m2-violet: #5c3f79;
+    --m2-rose:   #e08aa4;
+    --m2-gold:   #f3c273;
+    --m2-paper:  #fdf6ea;
+    --m2-ink:    #3b2a48;
+    --m2-ink-soft: #7c6389;
+}
+
+#scene-month2 { min-width: 0; }
+
+/* The sky sits on the body so it covers the full scroll, not just the card */
+body.reading-m2 {
+    background:
+        linear-gradient(
+            180deg,
+            var(--m2-night) 0%,
+            #3a2c5e 22%,
+            var(--m2-violet) 42%,
+            #a15f86 62%,
+            var(--m2-rose) 80%,
+            var(--m2-gold) 100%
+        )
+        fixed;
+}
+
+/* month one's falling petals would fight the sky — the sky is the atmosphere here */
+body.reading-m2 #hearts-canvas { display: none; }
+
+.m2-page {
+    width: min(92vw, 660px);
+    margin: 0 auto;
+    padding: 9vh 0 14vh;
+}
+
+/* ---------- Hero: the sun comes up behind the title ---------- */
+.m2-hero {
+    position: relative;
+    text-align: center;
+    padding: clamp(40px, 12vw, 90px) 0 clamp(22px, 6vw, 40px);
+}
+
+.m2-sun {
+    position: absolute;
+    left: 50%;
+    bottom: 34%;
+    width: min(62vw, 300px);
+    aspect-ratio: 1;
+    margin-left: min(-31vw, -150px);
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(255, 240, 208, 0.92) 0%,
+        rgba(255, 216, 150, 0.62) 30%,
+        rgba(244, 166, 140, 0.30) 52%,
+        rgba(226, 132, 150, 0.10) 70%,
+        rgba(226, 132, 150, 0) 78%
+    );
+    animation: m2Rise 2.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes m2Rise {
+    from { transform: translateY(46%) scale(0.86); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+}
+
+.m2-kicker {
+    position: relative;
+    margin: 0 0 2px;
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-size: clamp(22px, 5.6vw, 30px);
+    font-weight: 500;
+    color: #ffe9c6;
+}
+
+.m2-title {
+    position: relative;
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-variation-settings: "SOFT" 80, "WONK" 1;
+    font-weight: 600;
+    font-size: clamp(34px, 8.4vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: #fff8ee;
+    text-wrap: balance;
+}
+
+/* ---------- The letter, on real paper ---------- */
+.m2-paper {
+    padding: clamp(26px, 6.5vw, 52px) clamp(22px, 6vw, 46px);
+    background: var(--m2-paper);
+    border-radius: 3px;
+    box-shadow:
+        0 1px 2px rgba(34, 29, 71, 0.16),
+        0 18px 44px rgba(34, 29, 71, 0.3);
+    color: var(--m2-ink);
+}
+
+.m2-paper p {
+    margin: 0 0 1.4em;
+    max-width: 66ch;
+    font-family: "Fraunces", Georgia, serif;
+    font-variation-settings: "SOFT" 40, "WONK" 0;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: clamp(16px, 3.9vw, 18px);
+    line-height: 1.82;
+}
+
+.m2-paper p:last-of-type { margin-bottom: 0; }
+
+.m2-signoff {
+    margin: 1.5em 0 0 !important;
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-size: clamp(28px, 7vw, 38px);
+    line-height: 1.2;
+    text-align: right;
+    color: var(--m2-violet);
+}
+
+/* ---------- The photo, last ---------- */
+.m2-figure {
+    margin: clamp(40px, 10vw, 72px) 0 0;
+    text-align: center;
+}
+
+.m2-photo {
+    display: inline-block;
+    position: relative;
+    max-width: 100%;
+    padding: clamp(10px, 2.6vw, 15px) clamp(10px, 2.6vw, 15px) clamp(10px, 2.6vw, 15px);
+    background: var(--m2-paper);
+    border-radius: 2px;
+    box-shadow: 0 14px 34px rgba(34, 29, 71, 0.38);
+    transform: rotate(-1.6deg);
+}
+
+.m2-photo img {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    border-radius: 1px;
+}
+
+.m2-photo .photo-missing {
+    width: min(74vw, 420px);
+    height: 220px;
+    font-size: 15px;
+    color: var(--m2-ink-soft);
+}
+
+.m2-caption {
+    margin: clamp(18px, 4vw, 26px) 0 0;
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-size: clamp(22px, 5.4vw, 29px);
+    color: #fff1da;
+}
+
+/* ---------- Last line, on the sky ---------- */
+.m2-closing {
+    margin: clamp(46px, 11vw, 80px) 0 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-variation-settings: "SOFT" 80, "WONK" 1;
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(21px, 5.4vw, 31px);
+    line-height: 1.4;
+    text-align: center;
+    color: #2e2050;
+    text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .m2-sun { animation: none; }
+}

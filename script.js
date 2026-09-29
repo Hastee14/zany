@@ -36,6 +36,8 @@ const MONTH2 = {
   photo: "us2.jpg",
   caption: "my girlfriend 🫶",
 
+  song: "song2.mp3",
+
   letter: [
     "HI ZANYYY MERI JAAN. Wow it's been 2 months of us. 1 month of being bf and gf 😛. I just want to say these past 2 months have been the most amazing cutest best 2 months of my life. 2 months with the most amazing, the most special, and my favorite girl in the universe. AAAA MY GIRLFRIEND YAYAYAYAYAYAYAYAY 🫶🫶",
     "Zany you are not only the light in my life. You are the whole sky lit up by the sun too. The moon when everything else is dark. You are my home zany. The most beautiful lily in a room of ordinary flowers. I love you sososososo much",
@@ -306,7 +308,7 @@ function loadPhoto(imgId, missingId, src) {
 
 loadPhoto("us-photo", "us-missing", CONFIG.usPhoto);
 loadPhoto("her-photo", "her-missing", CONFIG.herPhoto);
-loadPhoto("m2-photo", "m2-missing", MONTH2.photo);
+loadPhoto("m2-photo-img", "m2-missing", MONTH2.photo);
 
 /* ============================================================================
    Page sections. Each one only appears if you actually filled it in.
@@ -838,6 +840,8 @@ const LETTERS = {
     lockHint: CONFIG.lockHint,
     lockError: CONFIG.lockError,
     scene: letterPage,
+    song: CONFIG.song,
+    bodyClass: "reading",
   },
   m2: {
     password: MONTH2.password,
@@ -846,6 +850,8 @@ const LETTERS = {
     lockHint: MONTH2.lockHint,
     lockError: MONTH2.lockError,
     scene: month2Page,
+    song: MONTH2.song,
+    bodyClass: "reading reading-m2",
   },
 };
 
@@ -926,10 +932,10 @@ function openLetter() {
   if (opened || !active) return;
   opened = true;
 
-  startMusic();
+  startMusic(active.song);
   heartRate = 0.5;
 
-  document.body.classList.add("reading");
+  document.body.classList.add(...active.bodyClass.split(" "));
   showScene(active.scene);
   window.scrollTo(0, 0);
   setupReveal();
@@ -1132,10 +1138,11 @@ yesBtn.addEventListener("click", () => {
    ============================================================================ */
 let songWanted = false; // has she left the music switched on?
 
-function startMusic() {
-  if (!CONFIG.song) return;
+function startMusic(src) {
+  const track = src || CONFIG.song;
+  if (!track) return;
 
-  song.src = CONFIG.song;
+  song.src = track;
   song.volume = 0;
 
   song
