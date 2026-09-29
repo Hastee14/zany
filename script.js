@@ -586,14 +586,33 @@ function petalPath(ctx, s) {
   ctx.closePath();
 }
 
+// A four-point sparkle, for month two's night sky.
+function starPath(ctx, s) {
+  const o = s / 2;
+  const i = s * 0.14;
+  ctx.beginPath();
+  ctx.moveTo(0, -o);
+  ctx.quadraticCurveTo(i, -i, o, 0);
+  ctx.quadraticCurveTo(i, i, 0, o);
+  ctx.quadraticCurveTo(-i, i, -o, 0);
+  ctx.quadraticCurveTo(-i, -i, 0, -o);
+  ctx.closePath();
+}
+
 const HEART_COLORS = ["#6b0f2a", "#8a2433", "#b8455f", "#a3324a"];
 const PETAL_COLORS = ["#f2c3ce", "#e28fa0", "#f7d3db", "#d98fa2"];
+const STAR_COLORS = ["#ffd97a", "#fff3c9", "#b9aef5", "#8f7fe8"];
 const hearts = [];
 
+// "petal" for month one, "star" for month two
+let particleMode = "petal";
+
 function spawnHeart(fromBottom = true) {
-  const isPetal = true; // lily petals only -- the hearts are retired
+  const isStar = particleMode === "star";
+  const isPetal = !isStar; // lily petals only -- the hearts are retired
   hearts.push({
     isPetal,
+    isStar,
     x: Math.random() * vw,
     y: fromBottom ? vh + 40 : Math.random() * vh,
     size: isPetal ? 14 + Math.random() * 26 : 10 + Math.random() * 20,
@@ -603,10 +622,18 @@ function spawnHeart(fromBottom = true) {
     alpha: 0.25 + Math.random() * 0.4,
     spin: (Math.random() - 0.5) * 0.01,
     rot: (Math.random() - 0.5) * 0.5,
-    color: isPetal
-      ? PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0]
-      : HEART_COLORS[(Math.random() * HEART_COLORS.length) | 0],
+    color: isStar
+      ? STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0]
+      : PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0],
   });
+}
+
+// Swap what falls, and restock so the change is immediate.
+function setParticles(mode) {
+  if (particleMode === mode) return;
+  particleMode = mode;
+  hearts.length = 0;
+  for (let i = 0; i < 22; i++) spawnHeart(false);
 }
 
 for (let i = 0; i < 18; i++) spawnHeart(false);
@@ -631,11 +658,15 @@ function updateHearts() {
     }
 
     hCtx.save();
-    hCtx.globalAlpha = p.alpha;
+    hCtx.globalAlpha = p.isStar
+      ? p.alpha * (0.45 + 0.55 * Math.abs(Math.sin(p.phase * 1.7)))
+      : p.alpha;
     hCtx.translate(p.x, p.y);
     hCtx.rotate(p.rot);
     hCtx.fillStyle = p.color;
-    if (p.isPetal) {
+    if (p.isStar) {
+      starPath(hCtx, p.size);
+    } else if (p.isPetal) {
       petalPath(hCtx, p.size);
     } else {
       heartPath(hCtx, 0, -p.size / 2, p.size);
@@ -845,6 +876,7 @@ const LETTERS = {
     song: CONFIG.song,
     songStart: CONFIG.songStart,
     bodyClass: "reading",
+    particles: "petal",
   },
   m2: {
     password: MONTH2.password,
@@ -856,6 +888,7 @@ const LETTERS = {
     song: MONTH2.song,
     songStart: MONTH2.songStart,
     bodyClass: "reading reading-m2",
+    particles: "star",
   },
 };
 
@@ -937,6 +970,7 @@ function openLetter() {
   opened = true;
 
   startMusic(active.song, active.songStart);
+  setParticles(active.particles);
   heartRate = 0.5;
 
   document.body.classList.add(...active.bodyClass.split(" "));
@@ -1144,18 +1178,6 @@ let songWanted = false; // has she left the music switched on?
 
 let songStart = 0; // where this track comes in, in seconds
 
-// <audio loop> always wraps back to 0, so a track with an offset has to be
-// nudged forward again each time round.
-song.addEventListener("timeupdate", () => {
-  if (songStart && song.currentTime < songStart - 0.5) {
-    try {
-      song.currentTime = songStart;
-    } catch (e) {
-      /* not seekable yet -- the next timeupdate will catch it */
-    }
-  }
-});
-
 function startMusic(src, startAt) {
   const track = src || CONFIG.song;
   if (!track) return;
@@ -1165,17 +1187,55 @@ function startMusic(src, startAt) {
   song.src = track;
   song.volume = 0;
 
-  // currentTime only sticks once the browser knows how long the file is
   if (songStart) {
-    const seekToStart = () => {
+    // Handle the wrap ourselves. `loop` always restarts at 0, and the guard
+    // that used to pull it back was firing DURING its own seek -- each seek
+    // re-triggered the next, so the track never actually got going.
+    song.loop = false;
+
+    song.addEventListener(
+      "loadedmetadata",
+      () => {
+        // A start past the end of the file would strand it in silence.
+        if (!isNaN(song.duration) && songStart >= song.duration - 1) {
+          songStart = 0;
+          song.loop = true;
+          return;
+        }
+        try {
+          song.currentTime = songStart;
+        } catch (e) {
+          songStart = 0; // not seekable: better from the top than not at all
+          song.loop = true;
+        }
+      },
+      { once: true }
+    );
+
+    song.addEventListener("ended", () => {
       try {
-        if (song.currentTime < songStart) song.currentTime = songStart;
+        song.currentTime = songStart;
       } catch (e) {
-        /* ignore -- timeupdate will move it */
+        song.currentTime = 0;
       }
-    };
-    song.addEventListener("loadedmetadata", seekToStart, { once: true });
-    song.addEventListener("canplay", seekToStart, { once: true });
+      song.play().catch(() => { });
+    });
+
+    // Watchdog. Seeking straight after load is the fragile part -- on some
+    // phones it stalls and the track never starts. Silence is worse than a
+    // wrong starting point, so if nothing is playing shortly after, give up
+    // on the offset and run the song from the top.
+    setTimeout(() => {
+      if (song.paused || song.currentTime > 0.4) return;
+      songStart = 0;
+      song.loop = true;
+      try {
+        song.currentTime = 0;
+      } catch (e) {
+        /* nothing else to try */
+      }
+      song.play().catch(() => { });
+    }, 3500);
   }
 
   song

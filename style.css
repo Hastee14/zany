@@ -1113,187 +1113,148 @@ video:-webkit-full-screen::backdrop {
 }
 
 /* ============================================================
-   MONTH TWO — daybreak.
-   Deliberately unlike month one: no pixel face, no hard offset
-   shadows, light instead of dark. The letter's own images are
-   sky, sun and moon, so the page is the sunrise they used to
-   talk through.
+   MONTH TWO — same pixel world as month one, at night.
+   Everything month one does (petals, reveals, hard offset
+   shadows, chunky borders) it does too; the palette is midnight
+   and gold instead of burgundy and rose, and the type changes.
    ============================================================ */
 :root {
-    --m2-night:  #221d47;
-    --m2-violet: #5c3f79;
-    --m2-rose:   #e08aa4;
-    --m2-gold:   #f3c273;
-    --m2-paper:  #fdf6ea;
-    --m2-ink:    #3b2a48;
-    --m2-ink-soft: #7c6389;
+    --m2-night:  #16123a;
+    --m2-deep:   #241d5c;
+    --m2-edge:   #5344b5;
+    --m2-star:   #ffd97a;
+    --m2-soft:   #cdc7f7;
+    --m2-bright: #f4f1ff;
+    --m2-shadow: rgba(4, 2, 22, 0.55);
 }
 
-#scene-month2 { min-width: 0; }
-
-/* The sky sits on the body so it covers the full scroll, not just the card */
 body.reading-m2 {
-    background:
-        linear-gradient(
-            180deg,
-            var(--m2-night) 0%,
-            #3a2c5e 22%,
-            var(--m2-violet) 42%,
-            #a15f86 62%,
-            var(--m2-rose) 80%,
-            var(--m2-gold) 100%
-        )
-        fixed;
+    background: var(--m2-night) url("lily-bg.svg") repeat;
+    background-size: 440px 440px;
 }
 
-/* month one's falling petals would fight the sky — the sky is the atmosphere here */
-body.reading-m2 #hearts-canvas { display: none; }
-
-.m2-page {
-    width: min(92vw, 660px);
-    margin: 0 auto;
-    padding: 9vh 0 14vh;
+/* the lily tile is pink; at night it should read as faint constellations */
+body.reading-m2::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--m2-night);
+    opacity: 0.72;
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* ---------- Hero: the sun comes up behind the title ---------- */
-.m2-hero {
-    position: relative;
-    text-align: center;
-    padding: clamp(40px, 12vw, 90px) 0 clamp(22px, 6vw, 40px);
-}
+.page.m2 { position: relative; z-index: 10; }
 
-.m2-sun {
-    position: absolute;
-    left: 50%;
-    bottom: 34%;
-    width: min(62vw, 300px);
-    aspect-ratio: 1;
-    margin-left: min(-31vw, -150px);
-    border-radius: 50%;
-    background: radial-gradient(
-        circle at 50% 50%,
-        rgba(255, 240, 208, 0.92) 0%,
-        rgba(255, 216, 150, 0.62) 30%,
-        rgba(244, 166, 140, 0.30) 52%,
-        rgba(226, 132, 150, 0.10) 70%,
-        rgba(226, 132, 150, 0) 78%
-    );
-    animation: m2Rise 2.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes m2Rise {
-    from { transform: translateY(46%) scale(0.86); opacity: 0; }
-    to   { transform: none; opacity: 1; }
-}
-
+/* ---------- Hero ---------- */
 .m2-kicker {
-    position: relative;
-    margin: 0 0 2px;
-    font-family: "Caveat", "Segoe Script", cursive;
-    font-size: clamp(22px, 5.6vw, 30px);
-    font-weight: 500;
-    color: #ffe9c6;
+    margin: 0 0 14px;
+    font-family: "Silkscreen", "Pixelify Sans", monospace;
+    font-size: clamp(11px, 2.9vw, 14px);
+    letter-spacing: 2px;
+    color: var(--m2-star);
 }
 
 .m2-title {
-    position: relative;
     margin: 0;
-    font-family: "Fraunces", Georgia, serif;
-    font-variation-settings: "SOFT" 80, "WONK" 1;
-    font-weight: 600;
-    font-size: clamp(34px, 8.4vw, 58px);
-    line-height: 1.08;
-    letter-spacing: -0.015em;
-    color: #fff8ee;
-    text-wrap: balance;
+    font-family: "Silkscreen", "Pixelify Sans", monospace;
+    font-weight: 700;
+    font-size: clamp(22px, 5.6vw, 36px);
+    line-height: 1.45;
+    color: var(--m2-bright);
+    text-shadow: 3px 3px 0 var(--m2-deep), 6px 6px 0 var(--m2-shadow);
 }
 
-/* ---------- The letter, on real paper ---------- */
+/* a little row of stars that twinkle out of step */
+.m2-stars {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin: 26px 0 0;
+}
+
+.m2-stars span {
+    width: 10px;
+    height: 10px;
+    background: var(--m2-star);
+    clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+    animation: m2Twinkle 2.4s ease-in-out infinite;
+}
+
+.m2-stars span:nth-child(2) { animation-delay: 0.4s; }
+.m2-stars span:nth-child(3) { animation-delay: 0.8s; }
+.m2-stars span:nth-child(4) { animation-delay: 1.2s; }
+.m2-stars span:nth-child(5) { animation-delay: 1.6s; }
+
+@keyframes m2Twinkle {
+    0%, 100% { opacity: 0.25; transform: scale(0.8); }
+    50%      { opacity: 1;    transform: scale(1.25); }
+}
+
+/* ---------- The letter: month one's card, at night ---------- */
 .m2-paper {
-    padding: clamp(26px, 6.5vw, 52px) clamp(22px, 6vw, 46px);
-    background: var(--m2-paper);
-    border-radius: 3px;
-    box-shadow:
-        0 1px 2px rgba(34, 29, 71, 0.16),
-        0 18px 44px rgba(34, 29, 71, 0.3);
-    color: var(--m2-ink);
+    margin-top: 40px;
+    background: var(--m2-deep);
+    border-color: var(--m2-edge);
+    box-shadow: 8px 8px 0 var(--m2-shadow);
+    color: var(--m2-soft);
 }
 
 .m2-paper p {
-    margin: 0 0 1.4em;
-    max-width: 66ch;
-    font-family: "Fraunces", Georgia, serif;
-    font-variation-settings: "SOFT" 40, "WONK" 0;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-size: clamp(16px, 3.9vw, 18px);
-    line-height: 1.82;
+    font-family: "VT323", "Pixelify Sans", monospace;
+    font-size: clamp(19px, 4.7vw, 22px);
+    line-height: 1.7;
+    letter-spacing: 0.3px;
 }
-
-.m2-paper p:last-of-type { margin-bottom: 0; }
 
 .m2-signoff {
-    margin: 1.5em 0 0 !important;
-    font-family: "Caveat", "Segoe Script", cursive;
-    font-size: clamp(28px, 7vw, 38px);
-    line-height: 1.2;
-    text-align: right;
-    color: var(--m2-violet);
+    font-family: "Silkscreen", "Pixelify Sans", monospace;
+    font-size: clamp(13px, 3.2vw, 16px);
+    color: var(--m2-star) !important;
 }
 
-/* ---------- The photo, last ---------- */
-.m2-figure {
-    margin: clamp(40px, 10vw, 72px) 0 0;
-    text-align: center;
-}
+/* ---------- The photo, after the letter ---------- */
+.m2-figure { margin: 0; }
 
 .m2-photo {
-    display: inline-block;
-    position: relative;
+    background: var(--m2-deep);
+    border: 3px solid var(--m2-edge);
+    box-shadow: 8px 8px 0 var(--m2-shadow);
+    padding: 12px 12px 12px;
     max-width: 100%;
-    padding: clamp(10px, 2.6vw, 15px) clamp(10px, 2.6vw, 15px) clamp(10px, 2.6vw, 15px);
-    background: var(--m2-paper);
-    border-radius: 2px;
-    box-shadow: 0 14px 34px rgba(34, 29, 71, 0.38);
-    transform: rotate(-1.6deg);
 }
 
 .m2-photo img {
     display: block;
     width: 100%;
-    max-width: 460px;
+    max-width: 420px;
+    max-height: 58vh;
     height: auto;
-    border-radius: 1px;
+    margin: 0 auto;
 }
 
 .m2-photo .photo-missing {
-    width: min(74vw, 420px);
+    width: min(74vw, 380px);
     height: 220px;
     font-size: 15px;
-    color: var(--m2-ink-soft);
 }
 
 .m2-caption {
-    margin: clamp(18px, 4vw, 26px) 0 0;
-    font-family: "Caveat", "Segoe Script", cursive;
-    font-size: clamp(22px, 5.4vw, 29px);
-    color: #fff1da;
+    margin: 20px 0 0;
+    font-family: "Silkscreen", "Pixelify Sans", monospace;
+    font-size: clamp(12px, 3.1vw, 15px);
+    line-height: 1.7;
+    color: var(--m2-star);
 }
 
-/* ---------- Last line, on the sky ---------- */
 .m2-closing {
-    margin: clamp(46px, 11vw, 80px) 0 0;
-    font-family: "Fraunces", Georgia, serif;
-    font-variation-settings: "SOFT" 80, "WONK" 1;
-    font-weight: 400;
-    font-style: italic;
-    font-size: clamp(21px, 5.4vw, 31px);
-    line-height: 1.4;
-    text-align: center;
-    color: #2e2050;
-    text-wrap: balance;
+    font-family: "Silkscreen", "Pixelify Sans", monospace;
+    font-size: clamp(15px, 3.8vw, 22px);
+    line-height: 1.7;
+    color: var(--m2-bright);
+    text-shadow: 2px 2px 0 var(--m2-shadow);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .m2-sun { animation: none; }
+    .m2-stars span { animation: none; opacity: 0.9; }
 }

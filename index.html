@@ -8,10 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Fraunces:opsz,wght@9..144,300..700&family=Caveat:wght@400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Silkscreen:wght@400;700&family=VT323&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=44" />
+    <link rel="stylesheet" href="style.css?v=46" />
   </head>
 
   <body>
@@ -136,33 +136,39 @@
 
     <!-- ===================== 4. Month two ===================== -->
     <section id="scene-month2" class="scene">
-      <div class="m2-page">
-        <header class="m2-hero">
-          <span class="m2-sun" aria-hidden="true"></span>
-          <p class="m2-kicker" id="m2-kicker"></p>
-          <h1 class="m2-title" id="m2-title"></h1>
+      <div class="page m2">
+        <header class="hero">
+          <p class="m2-kicker reveal" id="m2-kicker"></p>
+          <h1 class="m2-title reveal" id="m2-title"></h1>
+          <div class="m2-stars reveal" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
         </header>
 
-        <article class="m2-paper" id="m2-letter">
+        <article class="letter-paper m2-paper reveal" id="m2-letter">
           <div id="m2-body"></div>
-          <p class="m2-signoff" id="m2-signoff"></p>
+          <p class="signoff m2-signoff" id="m2-signoff"></p>
         </article>
 
-        <figure class="m2-figure">
-          <div class="m2-photo">
-            <img id="m2-photo-img" alt="" />
-            <span class="photo-missing" id="m2-missing" hidden></span>
-          </div>
-          <figcaption class="m2-caption" id="m2-caption"></figcaption>
-        </figure>
+        <section class="sec">
+          <figure class="m2-figure reveal">
+            <div class="photo-frame m2-photo">
+              <img id="m2-photo-img" alt="" />
+              <span class="photo-missing" id="m2-missing" hidden></span>
+            </div>
+            <figcaption class="m2-caption" id="m2-caption"></figcaption>
+          </figure>
+        </section>
 
-        <p class="m2-closing" id="m2-closing"></p>
+        <section class="sec">
+          <p class="closing m2-closing reveal" id="m2-closing"></p>
+        </section>
       </div>
     </section>
 
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
     <audio id="song" loop preload="auto"></audio>
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=46"></script>
   </body>
 </html>
