@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>One Month</title>
+    <title>Us</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=41" />
+    <link rel="stylesheet" href="style.css?v=42" />
   </head>
 
   <body>
@@ -22,8 +22,18 @@
       <span id="music-icon">&#9834;</span>
     </button>
 
+    <!-- ===================== 0. The shelf ===================== -->
+    <section id="scene-shelf" class="scene is-active">
+      <div class="shelf">
+        <p class="shelf-title" id="shelf-title"></p>
+        <p class="shelf-hint" id="shelf-hint"></p>
+        <div class="shelf-cards" id="shelf-cards"></div>
+      </div>
+    </section>
+
     <!-- ===================== 1. The lock ===================== -->
-    <section id="scene-lock" class="scene is-active">
+    <section id="scene-lock" class="scene">
+      <button class="shelf-back" id="lock-back" type="button">&#8592; back</button>
       <div class="lock-card" id="lock-card">
         <p class="occasion" id="occasion-label"></p>
         <img src="envelope.png" alt="" id="envelope" />
@@ -124,9 +134,33 @@
       </div>
     </section>
 
+    <!-- ===================== 4. Month two ===================== -->
+    <section id="scene-month2" class="scene">
+      <div class="page">
+        <header class="hero">
+          <p class="hero-kicker" id="m2-kicker"></p>
+          <h1 class="page-title" id="m2-title"></h1>
+          <div class="photo-frame photo-frame--lg">
+            <img id="m2-photo" alt="" />
+            <span class="photo-missing" id="m2-missing" hidden></span>
+          </div>
+          <p class="photo-caption" id="m2-caption"></p>
+        </header>
+
+        <article class="letter-paper reveal" id="m2-letter">
+          <div id="m2-body"></div>
+          <p class="signoff" id="m2-signoff"></p>
+        </article>
+
+        <section class="sec">
+          <p class="closing reveal" id="m2-closing"></p>
+        </section>
+      </div>
+    </section>
+
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
     <audio id="song" loop preload="auto"></audio>
-    <script src="script.js?v=41"></script>
+    <script src="script.js?v=42"></script>
   </body>
 </html>

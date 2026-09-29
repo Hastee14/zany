@@ -7,6 +7,47 @@
    EVERY SECTION IS OPTIONAL. Leave a list empty ( [] ) or a string empty ( "" )
    and that whole section disappears from the page automatically.
    ============================================================================ */
+/* ============================================================================
+   ✏️  THE SHELF — the first thing she sees. One card per letter.
+   Add a third card here when month three comes around, then add a matching
+   entry to LETTERS below. Nothing else needs touching.
+   ============================================================================ */
+const SHELF = {
+  title: "for my zany",
+  hint: "pick one ❀",
+  cards: [
+    { key: "m1", label: "month one", sub: "30 august" },
+    { key: "m2", label: "month two", sub: "30 september" },
+  ],
+};
+
+/* ============================================================================
+   ✏️  MONTH TWO — its own letter, its own lock.
+   ============================================================================ */
+const MONTH2 = {
+  password: "6767",
+  occasion: "two months",
+  lockTitle: "this one's locked too",
+  lockHint: "same number ❀",
+  lockError: "not quite. try again ❀",
+
+  heroKicker: "two months of us",
+  pageTitle: "Happy 2 months, Zany",
+  photo: "us2.jpg",
+  caption: "my girlfriend 🫶",
+
+  letter: [
+    "HI ZANYYY MERI JAAN. Wow it's been 2 months of us. 1 month of being bf and gf 😛. I just want to say these past 2 months have been the most amazing cutest best 2 months of my life. 2 months with the most amazing, the most special, and my favorite girl in the universe. AAAA MY GIRLFRIEND YAYAYAYAYAYAYAYAY 🫶🫶",
+    "Zany you are not only the light in my life. You are the whole sky lit up by the sun too. The moon when everything else is dark. You are my home zany. The most beautiful lily in a room of ordinary flowers. I love you sososososo much",
+    "I really don't know what I used to do before having you in my life zany. And I want to experience every part of life with you. I want to marry you. I can't wait until we are married. I can't wait until you are my wife ❤️❤️ when everything is ours. When home is somewhere we both live. When we can just do silly dumb things together always 😭. When we can have our own cutie things like our Lego room, our library, our coffee corner, all the cutie things 🫶🫶. We will have sooo much fun. I'm already having the most fun I've ever had in my life being with you. I can't imagine how amazing it will be being with you every day jaan. I love you 🫶🫶.",
+    "I'm incredibly lucky to have someone sooooooooooooo loving. ZANY YOU REALLY ARE A GEM. It's like I won the lottery. It's like you walked straight out of a dream. I'm so lucky that I think about it sometimes and tear up 😭. How can I have someone that is just pure love. The definition of love. A girl that makes people smile just by being there. Just being in your company is the most calming, most relaxing, most enjoyable feeling ever my love. I really am sooo lucky to have someone sooo smart. Like wow, you always tell me things I don't know, you always think of things in such an amazing way, your mind is soo admirable zany. My funny, smart, creative, talented, fun girl 🫶. YOU ARE LITERALLY THE MOST TALENTED EVERR. AND IM SO LUCKY THAT NOT ONLY ARE YOU THE BEST, YOU ARE THE PRETTIEST GIRL IN THE UNIVERSE. Like literally jaw dropping pretty. If the moon could see you it would get jealous 😭. I could get lost in your eyes zany forever and never want to find my way out. Your smile could light up the darkest room better than any light or candle ever could. It's my favorite thing in the whole world and I always want to make you happy and make you smile. I will always try my best my love 🫶🫶🫶",
+    "You are literally the best person ever. The love of my life. My soulmate. I CANT WAIT TO GO ON MORE CUTIE DATES WITH YOU. Where we do absolutely nothing or have the most random sidequests ever 😭. They're literally the best. I fall in love with you more and more every second. You are literally unreal. And you're mine forever zany. YAYAYAYYAAY MY GIRL FOREVER. And I'm all yours. ALL OF HISSY IS FOR YOU 🫶🫶🫶. You are perfect meri jaan. And you are always on my mind. The first thing I think about when I wake up, and the last thing I think about before sleeping. That's how amazing you are my girl ❤️. You make me the happiest. I can't wait for life with you. I love you more than anything meri jaan ❤️❤️❤️❤️❤️",
+    "I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU  I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU  I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU  I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU   I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU ❤️❤️❤️❤️❤️❤️❤️❤️",
+  ],
+  signoff: "— Hissy",
+  closing: "and a forever still to go",
+};
+
 const CONFIG = {
   herName: "Zany Danny",
 
@@ -201,10 +242,6 @@ const setText = (id, value) => {
 askQuestion.textContent = CONFIG.question;
 setText("ask-kicker", CONFIG.askKicker);
 setText("ask-lead", CONFIG.askLead);
-setText("occasion-label", CONFIG.occasion);
-setText("lock-title", CONFIG.lockTitle);
-setText("lock-hint", CONFIG.lockHint);
-setText("lock-error", CONFIG.lockError);
 setText("hero-kicker", CONFIG.heroKicker);
 setText("yes-title", CONFIG.yesTitle);
 setText("yes-subtitle", CONFIG.yesSubtitle);
@@ -217,6 +254,19 @@ const letterBody = document.getElementById("letter-body");
   const p = document.createElement("p");
   p.textContent = para;
   letterBody.appendChild(p);
+});
+
+setText("m2-kicker", MONTH2.heroKicker);
+setText("m2-title", MONTH2.pageTitle);
+setText("m2-caption", MONTH2.caption);
+setText("m2-signoff", MONTH2.signoff);
+setText("m2-closing", MONTH2.closing);
+
+const m2Body = document.getElementById("m2-body");
+(MONTH2.letter || []).forEach((para) => {
+  const p = document.createElement("p");
+  p.textContent = para;
+  m2Body.appendChild(p);
 });
 
 /* ============================================================================
@@ -256,6 +306,7 @@ function loadPhoto(imgId, missingId, src) {
 
 loadPhoto("us-photo", "us-missing", CONFIG.usPhoto);
 loadPhoto("her-photo", "her-missing", CONFIG.herPhoto);
+loadPhoto("m2-photo", "m2-missing", MONTH2.photo);
 
 /* ============================================================================
    Page sections. Each one only appears if you actually filled it in.
@@ -773,21 +824,113 @@ askCard.addEventListener("click", () => {
 });
 
 /* ============================================================================
-   Unlock -> straight to the page
+   The shelf -> a lock -> that letter
    ============================================================================ */
+const shelfScene = document.getElementById("scene-shelf");
+const month2Page = document.getElementById("scene-month2");
+
+// One entry per card on the shelf. `scene` is the page its PIN opens.
+const LETTERS = {
+  m1: {
+    password: CONFIG.password,
+    occasion: CONFIG.occasion,
+    lockTitle: CONFIG.lockTitle,
+    lockHint: CONFIG.lockHint,
+    lockError: CONFIG.lockError,
+    scene: letterPage,
+  },
+  m2: {
+    password: MONTH2.password,
+    occasion: MONTH2.occasion,
+    lockTitle: MONTH2.lockTitle,
+    lockHint: MONTH2.lockHint,
+    lockError: MONTH2.lockError,
+    scene: month2Page,
+  },
+};
+
+let active = null; // the letter she picked, until she gets the PIN right
+
+function showScene(scene) {
+  [shelfScene, lockScene, letterPage, month2Page].forEach((s) => {
+    if (s) s.classList.remove("is-active", "leaving");
+  });
+  scene.classList.add("is-active");
+}
+
+setText("shelf-title", SHELF.title);
+setText("shelf-hint", SHELF.hint);
+
+const shelfCards = document.getElementById("shelf-cards");
+(SHELF.cards || []).forEach((card) => {
+  if (!LETTERS[card.key]) return; // a card with no letter behind it does nothing
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "shelf-card";
+
+  const env = document.createElement("img");
+  env.src = "envelope.png";
+  env.alt = "";
+  btn.appendChild(env);
+
+  const label = document.createElement("span");
+  label.className = "shelf-card-label";
+  label.textContent = card.label;
+  btn.appendChild(label);
+
+  if (card.sub) {
+    const sub = document.createElement("span");
+    sub.className = "shelf-card-sub";
+    sub.textContent = card.sub;
+    btn.appendChild(sub);
+  }
+
+  btn.addEventListener("click", () => openLock(card.key));
+  shelfCards.appendChild(btn);
+});
+
+function openLock(key) {
+  active = LETTERS[key];
+  if (!active) return;
+
+  // Fresh lock every time -- she may have backed out mid-PIN.
+  pin = "";
+  locking = false;
+  paintDots();
+  lockError.hidden = true;
+  lockCard.classList.remove("unlocked", "shake");
+
+  setText("occasion-label", active.occasion);
+  setText("lock-title", active.lockTitle);
+  setText("lock-hint", active.lockHint);
+  setText("lock-error", active.lockError);
+
+  showScene(lockScene);
+}
+
+function backToShelf() {
+  active = null;
+  pin = "";
+  locking = false;
+  paintDots();
+  lockError.hidden = true;
+  showScene(shelfScene);
+}
+
+document.getElementById("lock-back").addEventListener("click", backToShelf);
+
 let opened = false;
 
 function openLetter() {
-  if (opened) return;
+  if (opened || !active) return;
   opened = true;
 
   startMusic();
   heartRate = 0.5;
 
-  lockScene.classList.remove("is-active");
-  lockScene.classList.remove("leaving");
   document.body.classList.add("reading");
-  letterPage.classList.add("is-active");
+  showScene(active.scene);
   window.scrollTo(0, 0);
   setupReveal();
 }
@@ -835,7 +978,7 @@ function pressKey(key) {
 
   if (pin.length < PIN_LENGTH) return;
 
-  if (pin === String(CONFIG.password)) {
+  if (active && pin === String(active.password)) {
     locking = true;
     lockCard.classList.add("unlocked");
     setTimeout(openLetter, reduceMotion ? 0 : 420);
@@ -854,7 +997,7 @@ keypad.addEventListener("click", (e) => {
 
 // and a real keyboard, for when she's on a laptop
 document.addEventListener("keydown", (e) => {
-  if (opened) return;
+  if (opened || !active) return;
   if (e.key === "Backspace") {
     e.preventDefault();
     pressKey("del");

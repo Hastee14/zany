@@ -995,3 +995,119 @@ video:-webkit-full-screen::backdrop {
     .letter-window, .pane, #scene-letterpage { transition: none; animation: none; }
     .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
 }
+
+/* ============================================================
+   The shelf — one envelope per letter, before the lock
+   ============================================================ */
+/* min-width:0 on both: these are flex items, and their default min-width:auto
+   lets the envelope + date text push the row wider than the phone. */
+#scene-shelf { min-width: 0; }
+
+.shelf {
+    width: 100%;
+    min-width: 0;
+    max-width: 640px;
+    padding: 0 20px;
+    text-align: center;
+    animation: cardIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.shelf-title {
+    margin: 0 0 6px;
+    font-size: clamp(22px, 6vw, 34px);
+    color: var(--pink);
+    letter-spacing: 2px;
+    text-transform: lowercase;
+}
+
+.shelf-hint {
+    margin: 0 0 30px;
+    font-size: clamp(15px, 4vw, 20px);
+    color: rgba(247, 223, 228, 0.72);
+    letter-spacing: 1px;
+    animation: fadePulse 2s ease-in-out infinite;
+}
+
+.shelf-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(16px, 4vw, 26px);
+}
+
+.shelf-card {
+    flex: 0 1 clamp(128px, 38vw, 200px);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: clamp(18px, 4vw, 26px) 14px clamp(16px, 3.5vw, 22px);
+    background: rgba(107, 15, 42, 0.92);
+    border: 3px solid var(--rose);
+    border-radius: 18px;
+    box-shadow: 8px 8px 0 var(--frame-shadow);
+    font-family: inherit;
+    color: var(--blush);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.shelf-card img {
+    width: min(22vw, 104px);
+    max-width: 100%;
+    margin-bottom: 4px;
+    image-rendering: pixelated;
+    filter: drop-shadow(3px 4px 0 var(--frame-shadow));
+}
+
+.shelf-card-label {
+    font-size: clamp(17px, 4.4vw, 22px);
+    letter-spacing: 1px;
+    text-transform: lowercase;
+}
+
+.shelf-card-sub {
+    font-size: clamp(12px, 3.1vw, 16px);
+    white-space: nowrap;
+    color: rgba(247, 223, 228, 0.6);
+    letter-spacing: 1px;
+}
+
+.shelf-card:hover,
+.shelf-card:focus-visible {
+    transform: translate(-2px, -4px);
+    box-shadow: 10px 12px 0 var(--frame-shadow);
+    border-color: var(--pink);
+    outline: none;
+}
+
+.shelf-card:active { transform: translate(2px, 2px); box-shadow: 5px 5px 0 var(--frame-shadow); }
+
+/* back out of a lock, to pick the other letter */
+.shelf-back {
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: none;
+    border: 2px solid rgba(184, 69, 95, 0.55);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: clamp(13px, 3.4vw, 16px);
+    letter-spacing: 1px;
+    color: rgba(247, 223, 228, 0.72);
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.shelf-back:hover,
+.shelf-back:focus-visible {
+    color: var(--blush);
+    border-color: var(--pink);
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shelf { animation: none; }
+    .shelf-hint { animation: none; opacity: 0.8; }
+    .shelf-card { transition: none; }
+}
