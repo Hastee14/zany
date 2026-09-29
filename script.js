@@ -889,6 +889,7 @@ const LETTERS = {
     songStart: MONTH2.songStart,
     bodyClass: "reading reading-m2",
     books: 0.32,
+    opensLikeABook: true,
   },
 };
 
@@ -971,6 +972,25 @@ function openLetter() {
 
   startMusic(active.song, active.songStart);
   setBookShare(active.books);
+
+  // Month two's book swings open once, after the page has settled. The class
+  // is the only thing that puts a cover on the page, so if this never runs
+  // the letter is simply already open.
+  if (active.opensLikeABook && !reduceMotion) {
+    const book = document.getElementById("m2-letter");
+    const cover = book && book.querySelector(".m2-cover");
+    if (book && cover) {
+      setTimeout(() => book.classList.add("opening"), 260);
+
+      // The cover must never outlive its animation. If the animation doesn't
+      // run -- blocked, throttled, a browser that skips it -- the cover would
+      // sit on top of the letter and she could never read it. So it is taken
+      // off the page when the animation ends, and on a timer regardless.
+      const dropCover = () => cover.remove();
+      cover.addEventListener("animationend", dropCover, { once: true });
+      setTimeout(dropCover, 2600);
+    }
+  }
   heartRate = 0.5;
 
   document.body.classList.add(...active.bodyClass.split(" "));
