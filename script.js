@@ -584,14 +584,37 @@ function petalPath(ctx, s) {
   ctx.closePath();
 }
 
+// A little open book, for month two.
+function bookPath(ctx, s) {
+  const w = s * 0.62;
+  const h = s * 0.34;
+  ctx.beginPath();
+  // left page
+  ctx.moveTo(0, -h * 0.5);
+  ctx.quadraticCurveTo(-w * 0.55, -h * 1.05, -w, -h * 0.45);
+  ctx.lineTo(-w, h * 0.72);
+  ctx.quadraticCurveTo(-w * 0.55, h * 0.16, 0, h);
+  // right page, mirrored
+  ctx.quadraticCurveTo(w * 0.55, h * 0.16, w, h * 0.72);
+  ctx.lineTo(w, -h * 0.45);
+  ctx.quadraticCurveTo(w * 0.55, -h * 1.05, 0, -h * 0.5);
+  ctx.closePath();
+}
+
 const HEART_COLORS = ["#6b0f2a", "#8a2433", "#b8455f", "#a3324a"];
 const PETAL_COLORS = ["#f2c3ce", "#e28fa0", "#f7d3db", "#d98fa2"];
+const BOOK_COLORS = ["#f6dbe2", "#e892a6", "#c9647e"];
 const hearts = [];
 
+// Month two mixes little books in among the petals; month one stays petals.
+let bookShare = 0;
+
 function spawnHeart(fromBottom = true) {
-  const isPetal = true; // lily petals only -- the hearts are retired
+  const isBook = bookShare > 0 && Math.random() < bookShare;
+  const isPetal = !isBook; // lily petals only -- the hearts are retired
   hearts.push({
     isPetal,
+    isBook,
     x: Math.random() * vw,
     y: fromBottom ? vh + 40 : Math.random() * vh,
     size: isPetal ? 14 + Math.random() * 26 : 10 + Math.random() * 20,
@@ -601,10 +624,18 @@ function spawnHeart(fromBottom = true) {
     alpha: 0.25 + Math.random() * 0.4,
     spin: (Math.random() - 0.5) * 0.01,
     rot: (Math.random() - 0.5) * 0.5,
-    color: isPetal
-      ? PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0]
-      : HEART_COLORS[(Math.random() * HEART_COLORS.length) | 0],
+    color: isBook
+      ? BOOK_COLORS[(Math.random() * BOOK_COLORS.length) | 0]
+      : PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0],
   });
+}
+
+// Restock so a change of mix shows up straight away.
+function setBookShare(share) {
+  if (bookShare === share) return;
+  bookShare = share;
+  hearts.length = 0;
+  for (let i = 0; i < 20; i++) spawnHeart(false);
 }
 
 for (let i = 0; i < 18; i++) spawnHeart(false);
@@ -633,7 +664,9 @@ function updateHearts() {
     hCtx.translate(p.x, p.y);
     hCtx.rotate(p.rot);
     hCtx.fillStyle = p.color;
-    if (p.isPetal) {
+    if (p.isBook) {
+      bookPath(hCtx, p.size);
+    } else if (p.isPetal) {
       petalPath(hCtx, p.size);
     } else {
       heartPath(hCtx, 0, -p.size / 2, p.size);
@@ -843,6 +876,7 @@ const LETTERS = {
     song: CONFIG.song,
     songStart: CONFIG.songStart,
     bodyClass: "reading",
+    books: 0,
   },
   m2: {
     password: MONTH2.password,
@@ -854,6 +888,7 @@ const LETTERS = {
     song: MONTH2.song,
     songStart: MONTH2.songStart,
     bodyClass: "reading reading-m2",
+    books: 0.32,
   },
 };
 
@@ -935,6 +970,7 @@ function openLetter() {
   opened = true;
 
   startMusic(active.song, active.songStart);
+  setBookShare(active.books);
   heartRate = 0.5;
 
   document.body.classList.add(...active.bodyClass.split(" "));

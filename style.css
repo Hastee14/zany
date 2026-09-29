@@ -1131,7 +1131,7 @@ video:-webkit-full-screen::backdrop {
 }
 
 body.reading-m2 {
-    background: var(--m2-ground) url("lily-bg.svg") repeat;
+    background: var(--m2-ground) url("book-bg.svg") repeat;
     background-size: 440px 440px;
 }
 
@@ -1145,8 +1145,11 @@ body.reading-m2 {
 
 .m2-title {
     margin: 0;
-    font-size: clamp(28px, 7vw, 44px);
-    line-height: 1.25;
+    font-family: "Yeseva One", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(32px, 8.4vw, 54px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
     color: var(--blush);
 }
 
