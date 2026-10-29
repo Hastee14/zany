@@ -2156,3 +2156,75 @@ body.reading-m3 {
     font-size: 21px;
     color: rgba(122, 18, 48, 0.5);
 }
+
+/* ---------- Show the whole photograph ----------
+   The image was pinned to 3:2 with object-fit:cover, so anything that
+   wasn't 3:2 got cropped -- the library one is 4:3, and lost a strip off
+   the top and bottom. Natural proportions now: nothing is cut. */
+.lily-card-photo img {
+    aspect-ratio: auto;
+    height: auto;
+    max-height: none;
+    object-fit: fill;
+}
+
+/* with no title written, the number stands on its own */
+.lily-card-head { gap: 0; }
+.lily-card-title:empty { display: none; }
+.lily-card-head:has(.lily-card-title:empty) { margin-bottom: 7px; }
+
+/* ---------- Fitting, solved by proportion rather than by guesswork ----------
+   Percentage padding is measured against WIDTH on every side, so as a long
+   note made the card taller the top and bottom insets stayed put and the
+   writing ran out through the ends of the petal.
+
+   The writing sits in an absolutely positioned box instead. Its insets are
+   percentages of the card in BOTH directions, so the box is the same
+   rectangle in the petal's own coordinates whatever size the card is -- if
+   it fits once it fits always. JS then sets the card's height from the
+   content, so the petal grows around the writing instead of cutting it. */
+.lily-card-inner {
+    position: relative;
+    display: block;
+    padding: 0;
+    overflow: visible;
+}
+
+.lily-card-body {
+    position: absolute;
+    top: 13%;
+    left: 15%;
+    right: 11%;
+    bottom: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.lily-card-head,
+.lily-card-text,
+.lily-card-photo {
+    width: 100%;
+    max-width: 100%;
+}
+
+.lily-card-photo { width: min(100%, 300px); }
+
+/* Measured against the outline: with the writing inset 19% from the pointed
+   end and 11% from the round one, the top and bottom need 20% to stay inside.
+   21.5% here, for margin. */
+.lily-card-body {
+    top: 21.5%;
+    left: 19%;
+    right: 11%;
+}
+
+/* A wider petal where there's room: the notes are long, and width is what
+   keeps the shape landscape rather than letting it go round. */
+.lily-card-inner { width: min(93vw, 860px); }
+.lily-card-photo { width: min(100%, 360px); }
+
+@media (max-width: 700px) {
+    .lily-card-photo { width: min(100%, 300px); }
+}

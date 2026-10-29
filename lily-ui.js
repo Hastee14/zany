@@ -99,10 +99,7 @@
   function buildPetal(i) {
     // The rotation lives on an inner group so the outer one is free to be
     // animated: a petal has to fall DOWN the screen, whichever way it points.
-    // Numbering starts at the bottom-left petal and works round clockwise --
-    // up the left, over the top, down the right -- so the sixth is the one at
-    // the bottom. 240deg is the 8 o'clock position.
-    const rot = 240 + i * (360 / PETALS);
+    const rot = i * (360 / PETALS);
     const outer = make("g", { class: "lily-petal", "data-i": i, tabindex: "0", role: "button" });
     outer.setAttribute("aria-label", "Pick petal " + (i + 1));
     const spun = make("g", { transform: "rotate(" + rot + ")" });
@@ -357,6 +354,8 @@
     const cardImg = document.getElementById("lily-card-img");
     const cardMissing = document.getElementById("lily-card-missing");
     const cardText = document.getElementById("lily-card-text");
+    const cardBody = document.getElementById("lily-card-body");
+    const cardInner = document.querySelector(".lily-card-inner");
     const cardClose = document.getElementById("lily-card-close");
     const finalEl = document.getElementById("lily-final");
 
@@ -396,8 +395,29 @@
       cardPhoto.style.setProperty("--tilt", ((r - Math.floor(r)) * 2 - 1) * 3.4 + "deg");
 
       cardEl.hidden = false;
-      requestAnimationFrame(() => cardEl.classList.add("is-open"));
+      requestAnimationFrame(() => {
+        cardEl.classList.add("is-open");
+        sizeToContent();
+      });
     }
+
+    // The writing sits between insets of 21.5% top and bottom, so the card
+    // has to be tall enough that the middle 57% of it holds the content.
+    const INSET_BAND = 0.57;
+
+    function sizeToContent() {
+      cardInner.style.height = "auto";
+      const h = cardBody.offsetHeight / INSET_BAND;
+      cardInner.style.height = Math.ceil(h) + "px";
+    }
+
+    // A photo that hasn't loaded has no height yet, so measure again when it has.
+    cardImg.addEventListener("load", () => {
+      if (!cardEl.hidden) sizeToContent();
+    });
+    window.addEventListener("resize", () => {
+      if (!cardEl.hidden) sizeToContent();
+    });
 
     function hideCard() {
       cardEl.classList.remove("is-open");

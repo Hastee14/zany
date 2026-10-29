@@ -21,34 +21,34 @@ const LILY = {
   /* ---------- The six petals, in the order she'll most likely tap them ---------- */
   petals: [
     {
-      title: "Petal one — REPLACE ME",
-      text: "REPLACE ME. A few lines. The shorter the better -- this is a note, not a letter.",
+      title: "",
+      text: "ZANYYYY. My baby. It's been 3 months of us. 3 months being with the best, the most loving, the most amazing girl in the universe 🫶🫶🫶. These have been the best 3 months of my life ever and I'm soooo lucky to have you my princess. I LOVE YOU SOOOO MUCH ❤️❤️❤️❤️",
+      photo: "petal6.jpg",
+    },
+    {
+      title: "",
+      text: "This is our first month long distance. But you have made the hard days so much easier jaanu. The distance will never change us ❤️❤️❤️. Our calls are the best zany. I love all of them. Doing anything on call with you. Even just existing is the best feeling ever. It's a glimpse into our future baby. Existing together 🫶🫶. Each day is one day closer to us being married baby and I can't wait. To have the best prettiest wifey ever ❤️❤️❤️❤️",
       photo: "petal1.jpg",
     },
     {
-      title: "Petal two — REPLACE ME",
-      text: "REPLACE ME.",
-      photo: "petal2.jpg",
-    },
-    {
-      title: "Petal three — REPLACE ME",
-      text: "REPLACE ME.",
+      title: "",
+      text: "I can't wait to be with you always. To hug you. To cuddle you. TO GIVE YOU INFINITE FOREHEAD KISSES. To kiss you on your cutie lips. Rhdhdjfjfjd bye. I can't wait until you are always in my arms. Laying on my chest while I wrap my arms around you. Waking up and the first thing we see is each other. I can't wait for it all jaanu 🫶🫶 us being together always forever.",
       photo: "petal3.jpg",
     },
     {
-      title: "Petal four — REPLACE ME",
+      title: "",
+      text: "But I miss you sooo much baby. I miss being next to you. I miss seeing your pretty face. Talking to you while you are next to me. Holding your hand. Holding your face. Resting our heads on each other. I miss everything. I miss our vlogs. I miss our random sidequests. Trying fire food with you. I miss being with you sooo much meri jaan ❤️🫶🫶😔",
+      photo: "petal2.jpg",
+    },
+    {
+      title: "",
       text: "REPLACE ME.",
       photo: "petal4.jpg",
     },
     {
-      title: "Petal five — REPLACE ME",
+      title: "",
       text: "REPLACE ME.",
       photo: "petal5.jpg",
-    },
-    {
-      title: "Petal six — REPLACE ME",
-      text: "REPLACE ME.",
-      photo: "petal6.jpg",
     },
   ],
 
