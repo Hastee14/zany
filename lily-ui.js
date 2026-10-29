@@ -234,43 +234,9 @@
     return g;
   }
 
-  // Hand-tied: the stems stay on show, gathered and ribboned. No paper.
-  function wrap() {
-    const g = make("g", { class: "lily-wrap" });
-
-    // the cut ends below the tie
-    [-16, -6, 4, 14].forEach((x, i) => {
-      g.appendChild(make("path", {
-        d: "M" + x + "," + (TIE_Y - 6) + " C" + (x - 3) + "," + (TIE_Y + 40) + " " +
-           (x - 7 + i * 2) + "," + (TIE_Y + 70) + " " + (x - 10 + i * 3) + "," + (TIE_Y + 96),
-        fill: "none", stroke: "url(#lilyStem)", "stroke-width": 5 - i * 0.3,
-        "stroke-linecap": "round", opacity: 0.9,
-      }));
-    });
-
-    // ribbon round the gather, with tails
-    g.appendChild(make("path", {
-      d: "M-7,282 C-26,312 -31,338 -20,358", fill: "none",
-      stroke: "#e892a6", "stroke-width": 5, "stroke-linecap": "round", opacity: 0.9,
-    }));
-    g.appendChild(make("path", {
-      d: "M7,282 C28,310 35,336 26,360", fill: "none",
-      stroke: "#f0aebd", "stroke-width": 5, "stroke-linecap": "round", opacity: 0.9,
-    }));
-    g.appendChild(make("rect", { x: -34, y: 266, width: 68, height: 14, rx: 7, fill: "#e892a6" }));
-    g.appendChild(make("path", {
-      d: "M-7,273 C-28,256 -48,260 -50,273 C-48,287 -28,290 -7,274 Z", fill: "#f0aebd",
-    }));
-    g.appendChild(make("path", {
-      d: "M7,273 C28,256 48,260 50,273 C48,287 28,290 7,274 Z", fill: "#f0aebd",
-    }));
-    g.appendChild(make("circle", { cx: 0, cy: 273, r: 6.5, fill: "#f6dbe2" }));
-    return g;
-  }
-
   function buildLily() {
     const svg = make("svg", {
-      viewBox: "-250 -250 500 650",
+      viewBox: "-250 -232 500 520",
       class: "lily-svg",
       role: "img",
       "aria-label": "A bouquet of lilies",
@@ -298,11 +264,16 @@
     ].forEach(([x, y, r, s]) => fillers.appendChild(sprig(x, y, r, s)));
     figure.appendChild(fillers);
 
+    // One stem per flower, bud and sprig. Six of the sprigs had none and were
+    // hanging in mid-air with nothing holding them to the bunch.
     figure.appendChild(stems([
       [0, 40, 9], [-150, 78, 6.5], [146, 34, 6.5],
-      [-186, 36, 3.4, 0.75], [182, 10, 3.4, 0.75],
       [-176, -18, 5], [168, -48, 5], [-58, -96, 4.4],
       [-30, 130, 5, 0.9], [38, 136, 5, 0.9],
+      [-186, 36, 3.2, 0.75], [182, 10, 3.2, 0.75],
+      [-120, -58, 2.8, 0.7], [126, -74, 2.8, 0.7],
+      [-62, -128, 2.6, 0.65], [66, -140, 2.6, 0.65],
+      [-210, 120, 2.8, 0.7], [206, 104, 2.8, 0.7],
     ]));
 
     // Mid: the flowers she doesn't pick, at four different heights.
@@ -314,7 +285,6 @@
     extra.appendChild(sideLily(146, 34, 0.52, 22, 0.74));
     figure.appendChild(extra);
 
-    figure.appendChild(wrap());
 
     const head = make("g", { class: "lily-head" });
     const petals = [];

@@ -42,21 +42,21 @@ const LILY = {
     },
     {
       title: "",
-      text: "REPLACE ME.",
+      text: "I'm so lucky to have you zany. LIKE IM ACC THE LUCKIEST BOY IN THE UNIVERSE. How are you real my love. I love being loved by you. I love you for who you are. I love everything about you. I'm still think back and I'm like wow. WE ARE SOOO UNEXPECTED. I HAVE BEEN DATING ZAINAB LODHI FOR 3 MONTHS WOWOW. But I'm soooo happy we found each other baby. I love us ❤️❤️❤️ and I love you more than I can ever say jaanu. You are my everything.",
       photo: "petal4.jpg",
     },
     {
       title: "",
-      text: "REPLACE ME.",
+      text: "Thank you for everything zany. For loving me the way you do. For being the most amazing. The most caring. The best girlfriend I could ever ask for. Thank you for making me feel sooo loved even when we are thousands of kilometers apart. I'm always going to be here forever jaanu. You are my forever. It has been 3 months baby. We have a whole forever together ❤️❤️❤️. I LOVE YOU IMPOSSIBLY MUCH. I LOVE YOU MORE THAN I CAN SAY. My zany for life 🫶🫶🫶🫶.",
       photo: "petal5.jpg",
     },
   ],
 
   /* ---------- What she sees once every petal is gone ---------- */
   final: {
-    heading: "REPLACE ME",
-    text: "REPLACE ME. This is the one she reads last, so make it the one that lands.",
-    signoff: "— Hissy",
+    heading: "Happy 3 months Baby",
+    text: "I love you so much ❤️",
+    signoff: "Your Hissy ❤️",
   },
 
   /* ---------- Music. Leave song as "" for a quiet page. ---------- */

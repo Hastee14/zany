@@ -2228,3 +2228,77 @@ body.reading-m3 {
 @media (max-width: 700px) {
     .lily-card-photo { width: min(100%, 300px); }
 }
+
+/* ---------- The whole flower on one screen ----------
+   It was taller than the viewport, so the bottom of the bunch was cut off
+   and she had to scroll to see it. Sized by height now, not width, so it
+   always fits whatever the screen. */
+.lily-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100svh;
+    padding: 2vh 0 3vh;
+}
+
+.lily-svg {
+    height: min(60svh, 540px);
+    width: auto;
+    max-width: 96vw;
+}
+
+.lily-glow {
+    top: 50%;
+    width: min(96vw, 620px);
+    height: min(70svh, 620px);
+    aspect-ratio: auto;
+    margin-top: min(-35svh, -310px);
+    margin-left: min(-48vw, -310px);
+}
+
+/* once petals are picked the tray appears -- keep the lot on screen */
+body.reading-m3:has(.lily-tray-wrap:not([hidden])) .lily-svg {
+    height: min(46svh, 430px);
+}
+
+.lily-tray-wrap { margin-top: 12px; padding: 12px 14px 12px; }
+.lily-tray-label { margin-bottom: 9px; }
+.lily-reset { margin-top: 11px; }
+
+/* Once every petal is gone the last message joins the tray, and the three
+   together were taller than the screen. The bare flower gives up its room:
+   it has nothing left on it, and the message is the point by then. */
+body.reading-m3:has(#lily-final:not([hidden])) .lily-svg {
+    height: min(32svh, 300px);
+}
+
+body.reading-m3:has(#lily-final:not([hidden])) .lily-tray-wrap {
+    margin-top: 8px;
+    padding: 9px 12px;
+}
+
+.lily-final { margin-top: clamp(12px, 2.4vh, 24px); }
+.lily-final-heading { margin-bottom: 8px; }
+
+/* Height-first sizing let the flower grow wider than the screen -- max-width
+   can't shrink a replaced element whose height is already fixed, so the sides
+   were being cut. Width-first instead, with the height merely capped: the SVG
+   then scales its own contents to fit, and nothing can leave the screen in
+   either direction. */
+.lily-svg {
+    width: min(94vw, 520px);
+    height: auto;
+    max-height: 58svh;
+    max-width: 94vw;
+}
+
+body.reading-m3:has(.lily-tray-wrap:not([hidden])) .lily-svg {
+    height: auto;
+    max-height: 44svh;
+}
+
+body.reading-m3:has(#lily-final:not([hidden])) .lily-svg {
+    height: auto;
+    max-height: 30svh;
+}
