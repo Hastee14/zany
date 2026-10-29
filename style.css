@@ -2420,3 +2420,44 @@ body.reading-m3:has(.lily-tray-wrap:not([hidden])) .lily-svg {
    works out, so on wider screens the petal was being forced to 464px
    whatever the note said. The measured height is the authority. */
 .lily-card-inner { min-height: 0; }
+
+/* ---------- The petal stands up when the note is long ----------
+   Nothing is hidden and nothing scrolls inside the shape any more: she can
+   see there is more because it is all simply there. A petal lying down can
+   only stretch so far before its point flattens out, so past that it stands
+   up -- which is the way a petal is shaped, so it can be as long as the note
+   needs. */
+.lily-card-body {
+    overflow-y: visible;
+    overscroll-behavior: auto;
+}
+
+.lily-card-inner.is-tall {
+    clip-path: url(#petalCardV);
+    -webkit-clip-path: url(#petalCardV);
+    background:
+        radial-gradient(circle at 38% 78%, rgba(109,15,43,.45) 0 2.4px, transparent 2.5px),
+        radial-gradient(circle at 60% 84%, rgba(109,15,43,.4) 0 2.1px, transparent 2.2px),
+        radial-gradient(circle at 48% 90%, rgba(109,15,43,.35) 0 1.9px, transparent 2px),
+        radial-gradient(circle at 55% 72%, rgba(109,15,43,.3) 0 2px, transparent 2.1px),
+        linear-gradient(180deg, #fffafb 0%, #fbe4ea 26%, #f4c8d4 58%, #e7a0b3 84%, #d4718a 100%);
+}
+
+.lily-card-inner.is-tall .lily-card-body {
+    top: 20%;
+    bottom: 12%;
+    left: 20.5%;
+    right: 20.5%;
+}
+
+/* the vein runs the length of the petal, so it turns with it */
+.lily-card-inner.is-tall::before {
+    top: 8%;
+    bottom: 6%;
+    left: 50%;
+    right: auto;
+    width: 2px;
+    height: auto;
+    margin: 0 0 0 -1px;
+    background: linear-gradient(180deg, rgba(201,96,124,0) 0%, rgba(201,96,124,.4) 24%, rgba(201,96,124,.2) 100%);
+}

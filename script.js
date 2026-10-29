@@ -913,6 +913,7 @@ const LETTERS = {
     scene: lilyPage,
     song: (typeof LILY !== "undefined" && LILY.song) || "",
     songStart: (typeof LILY !== "undefined" && LILY.songStart) || 0,
+    volume: (typeof LILY !== "undefined" && LILY.volume) || 0,
     bodyClass: "reading reading-m3",
     books: 0,
     onOpen: () => {
@@ -998,7 +999,7 @@ function openLetter() {
   if (opened || !active) return;
   opened = true;
 
-  if (active.song) startMusic(active.song, active.songStart);
+  if (active.song) startMusic(active.song, active.songStart, active.volume);
   setBookShare(active.books);
 
   // Month two's book swings open once, after the page has settled. The class
@@ -1228,9 +1229,13 @@ let songWanted = false; // has she left the music switched on?
 
 let songStart = 0; // where this track comes in, in seconds
 
-function startMusic(src, startAt) {
+function startMusic(src, startAt, vol) {
   const track = src || CONFIG.song;
   if (!track) return;
+
+  // Each letter can be quieter than the rest; month three's track is a loud
+  // recording and would come in far too hot at the usual level.
+  const target = vol || CONFIG.volume;
 
   songStart = Number(startAt) || 0;
 
@@ -1294,10 +1299,10 @@ function startMusic(src, startAt) {
       songWanted = true;
       musicToggle.hidden = false;
       // Fade in so it doesn't blast her
-      const step = CONFIG.volume / 40;
+      const step = target / 40;
       const fade = setInterval(() => {
-        song.volume = Math.min(CONFIG.volume, song.volume + step);
-        if (song.volume >= CONFIG.volume) clearInterval(fade);
+        song.volume = Math.min(target, song.volume + step);
+        if (song.volume >= target) clearInterval(fade);
       }, 50);
     })
     .catch(() => {

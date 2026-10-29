@@ -52,7 +52,9 @@ const LILY = {
     },
   ],
 
-  /* ---------- Music. Leave song as "" for a quiet page. ---------- */
-  song: "",
+  /* ---------- Music. Leave song as "" for a quiet page.
+     `volume` is 0 to 1 -- this track is a loud recording, so it is set low. ---------- */
+  song: "song3.mp3",
   songStart: 0,
+  volume: 0.12,
 };

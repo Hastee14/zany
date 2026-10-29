@@ -372,27 +372,35 @@
 
     // The writing sits between insets of 21.5% top and bottom, so the card
     // has to be tall enough that the middle 57% of it holds the content.
-    const INSET_BAND = 0.57;
+    // How much of the card's height the writing may use, in each orientation.
+    const BAND_WIDE = 0.57; // petal lying down
+    const BAND_TALL = 0.68; // petal standing up
 
+    function naturalHeight() {
+      cardBody.style.bottom = "auto";
+      cardBody.style.height = "auto";
+      const h = cardBody.offsetHeight;
+      cardBody.style.bottom = "";
+      cardBody.style.height = "";
+      return h;
+    }
+
+    // Nothing is ever hidden: the card grows to hold the whole note. A petal
+    // on its side can only stretch so far before the point flattens into an
+    // egg, so once the note needs more height than width the petal stands up
+    // instead -- which is how a petal is shaped anyway, so it can be as long
+    // as it likes.
     function sizeToContent() {
       const w = cardInner.offsetWidth;
 
-      // Measure the writing at its natural height: with no bottom to pin it
-      // the box is only as tall as what is in it.
-      cardBody.style.bottom = "auto";
-      cardBody.style.height = "auto";
-      cardBody.style.overflowY = "visible";
-      const contentH = cardBody.offsetHeight;
-      cardBody.style.bottom = "";
-      cardBody.style.height = "";
-      cardBody.style.overflowY = "";
+      cardInner.classList.add("is-tall");
+      let h = naturalHeight() / BAND_TALL;
 
-      // The outline stretches with the card, so letting the card grow without
-      // limit turned the petal into an egg. It may grow for a longer note,
-      // but only so far -- past that the writing scrolls inside the shape.
-      const natural = contentH / INSET_BAND;
-      const cap = Math.min(w * 1.25, window.innerHeight * 0.84);
-      const h = Math.max(w / 1.5, Math.min(natural, cap));
+      if (h <= w) {
+        cardInner.classList.remove("is-tall");
+        h = Math.max(w / 1.5, naturalHeight() / BAND_WIDE);
+      }
+
       cardInner.style.height = Math.ceil(h) + "px";
     }
 
