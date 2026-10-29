@@ -9,10 +9,11 @@
    Keep it to six -- the flower is drawn with six petals. Write them short;
    each one is a card she reads on her phone, not a whole page.
 
-   PHOTOS point at pictures already in this folder so you can see it working.
-   Swap the `photo` lines for your own. A photo that isn't there yet shows a
-   label saying which file is missing, so nothing breaks silently.
-   Leave `photo` as "" for a card with no picture.
+   PHOTOS: petal1.jpg .. petal6.jpg are the six you sent, already sized down
+   for her phone. To change one, drop the new file in this folder and put its
+   name on the `photo` line. A photo that isn't there yet shows a label saying
+   which file is missing, so nothing breaks silently. Leave `photo` as "" for
+   a petal with no picture. Landscape photos fit the petal best.
    ============================================================================ */
 const LILY = {
   hint: "pick a petal 🌸",
@@ -22,38 +23,38 @@ const LILY = {
     {
       title: "Petal one — REPLACE ME",
       text: "REPLACE ME. A few lines. The shorter the better -- this is a note, not a letter.",
-      photo: "us.jpg",
+      photo: "petal1.jpg",
       caption: "us",
     },
     {
       title: "Petal two — REPLACE ME",
       text: "REPLACE ME.",
-      photo: "her.jpg",
-      caption: "my favourite person in the world",
+      photo: "petal2.jpg",
+      caption: "the library floor",
     },
     {
       title: "Petal three — REPLACE ME",
       text: "REPLACE ME.",
-      photo: "photo1.jpg",
-      caption: "that smile",
+      photo: "petal3.jpg",
+      caption: "a heart, obviously",
     },
     {
       title: "Petal four — REPLACE ME",
       text: "REPLACE ME.",
-      photo: "us2.jpg",
-      caption: "september",
+      photo: "petal4.jpg",
+      caption: "just us",
     },
     {
       title: "Petal five — REPLACE ME",
       text: "REPLACE ME.",
-      photo: "love.jpg",
-      caption: "the love of my life",
+      photo: "petal5.jpg",
+      caption: "late one night",
     },
     {
       title: "Petal six — REPLACE ME",
       text: "REPLACE ME.",
-      photo: "kid.jpg",
-      caption: "same smile, smaller zany",
+      photo: "petal6.jpg",
+      caption: "i ❤ biceps",
     },
   ],
 
