@@ -329,6 +329,8 @@
     const hintEl = document.getElementById("lily-hint");
     const promptEl = document.getElementById("lily-prompt");
     const trayEl = document.getElementById("lily-tray");
+    const trayWrap = document.getElementById("lily-tray-wrap");
+    const resetBtn = document.getElementById("lily-reset");
     const cardEl = document.getElementById("lily-card");
     const cardTitle = document.getElementById("lily-card-title");
     const cardPhoto = document.getElementById("lily-card-photo");
@@ -400,7 +402,7 @@
       b.style.setProperty("--spin", (i * 23) % 40 - 20 + "deg");
       b.addEventListener("click", () => { if (cardEl.hidden) showCard(i); });
       trayEl.appendChild(b);
-      trayEl.hidden = false;
+      trayWrap.hidden = false;
     }
 
     function finish() {
@@ -417,6 +419,7 @@
     // one above it is taken -- tapping repeatedly in one place stripped the
     // whole flower before she had read a word.
     let picking = false;
+    const flights = [];
 
     function pick(i, node) {
       if (picked.has(i) || picking || !cardEl.hidden) return;
@@ -476,10 +479,44 @@
         land();
         release();
       };
+      flights.push(anim);
       anim.onfinish = once;
       // The card must open even if the animation never reports finishing.
       setTimeout(once, 1500);
     }
+
+    function resetAll() {
+      flights.forEach((a) => {
+        try {
+          a.cancel();
+        } catch (e) {
+          /* already gone */
+        }
+      });
+      flights.length = 0;
+
+      picked.clear();
+      picking = false;
+
+      petals.forEach((node) => {
+        node.classList.remove("is-gone");
+        node.style.visibility = "";
+        node.style.pointerEvents = "";
+        node.style.transform = "";
+        node.setAttribute("tabindex", "0");
+      });
+
+      trayEl.textContent = "";
+      trayWrap.hidden = true;
+      finalEl.hidden = true;
+      finalEl.classList.remove("is-in");
+      promptEl.classList.remove("is-done");
+    }
+
+    resetBtn.addEventListener("click", () => {
+      if (!cardEl.hidden) hideCard();
+      resetAll();
+    });
 
     petals.forEach((node, i) => {
       node.addEventListener("click", () => pick(i, node));

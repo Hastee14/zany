@@ -1791,3 +1791,135 @@ body.reading-m3 {
 }
 
 .lily-card { transition: opacity 0.42s ease; }
+
+/* ============================================================
+   Month three, take four: the note is written on the petal
+   ============================================================ */
+
+/* The card IS the petal she just took -- same silhouette, same
+   white-to-pink wash, freckled near the base. */
+.lily-card-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.lily-card-inner {
+    width: min(86vw, 380px);
+    max-height: none;
+    min-height: min(68vh, 500px);
+    overflow: visible;
+    /* The petal is narrow at the point and wide in the middle, so the writing
+       is centred into the wide part rather than starting at the top where it
+       would run off the edges. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20% 21%;
+    border-radius: 0;
+    background:
+        radial-gradient(circle at 36% 74%, rgba(109,15,43,.5) 0 2.6px, transparent 2.7px),
+        radial-gradient(circle at 60% 80%, rgba(109,15,43,.45) 0 2.3px, transparent 2.4px),
+        radial-gradient(circle at 46% 86%, rgba(109,15,43,.4) 0 2px, transparent 2.1px),
+        radial-gradient(circle at 56% 68%, rgba(109,15,43,.35) 0 2.2px, transparent 2.3px),
+        linear-gradient(180deg, #fffafb 0%, #fbe4ea 24%, #f4c8d4 58%, #e7a0b3 84%, #d4718a 100%);
+    box-shadow: none;
+    clip-path: url(#petalCard);
+    -webkit-clip-path: url(#petalCard);
+    color: var(--ly-ink);
+    text-align: center;
+}
+
+/* the vein running up the middle, as on the real ones */
+.lily-card-inner::before {
+    content: "";
+    position: absolute;
+    top: 9%;
+    bottom: 6%;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: linear-gradient(180deg, rgba(201,96,124,0) 0%, rgba(201,96,124,.4) 30%, rgba(201,96,124,.25) 100%);
+    pointer-events: none;
+}
+
+.lily-card-title {
+    margin: 0 0 14px;
+    font-size: clamp(14px, 3.1vw, 17px);
+    line-height: 1.35;
+    text-wrap: balance;
+    color: #7a1230;
+}
+
+.lily-card-photo {
+    width: min(94%, 190px);
+    margin: 0 auto 14px;
+    padding: 7px 7px 5px;
+    background: #fffdfa;
+    box-shadow: 0 5px 14px rgba(90, 13, 34, 0.22);
+}
+
+.lily-card-photo img { max-height: 26vh; }
+
+.lily-card-photo figcaption { font-size: clamp(13px, 2.8vw, 16px); }
+
+.lily-card-text {
+    margin: 0;
+    font-size: clamp(16px, 3.7vw, 20px);
+    line-height: 1.5;
+    color: #5a0d22;
+}
+
+.lily-card-close {
+    position: static;
+    padding: 9px 20px;
+    background: rgba(90, 13, 34, 0.75);
+    border: 2px solid var(--ly-pink);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: clamp(13px, 3.2vw, 16px);
+    color: #fff1f4;
+    cursor: pointer;
+}
+
+/* ---------- Picked petals: say plainly that they can be read again ---------- */
+.lily-tray-wrap {
+    margin-top: 18px;
+    padding: 16px 14px 14px;
+    background: rgba(40, 6, 18, 0.5);
+    border: 2px solid rgba(232, 146, 166, 0.35);
+    border-radius: 18px;
+}
+
+.lily-tray-label {
+    margin: 0 0 12px;
+    font-size: clamp(13px, 3.2vw, 16px);
+    line-height: 1.5;
+    color: var(--ly-pink);
+}
+
+.lily-tray { margin-top: 0; gap: 14px; }
+
+.lily-tray-petal {
+    width: 30px;
+    height: 54px;
+    opacity: 1;
+    box-shadow: 0 4px 10px rgba(20, 2, 10, 0.5);
+}
+
+.lily-reset {
+    margin-top: 16px;
+    padding: 9px 20px;
+    background: none;
+    border: 2px solid rgba(232, 146, 166, 0.55);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: clamp(12px, 3vw, 15px);
+    color: rgba(253, 238, 241, 0.85);
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.lily-reset:hover,
+.lily-reset:focus-visible { border-color: var(--ly-pink); color: #fff1f4; outline: none; }
