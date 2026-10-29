@@ -47,17 +47,10 @@ const LILY = {
     },
     {
       title: "",
-      text: "Thank you for everything zany. For loving me the way you do. For being the most amazing. The most caring. The best girlfriend I could ever ask for. Thank you for making me feel sooo loved even when we are thousands of kilometers apart. I'm always going to be here forever jaanu. You are my forever. It has been 3 months baby. We have a whole forever together ❤️❤️❤️. I LOVE YOU IMPOSSIBLY MUCH. I LOVE YOU MORE THAN I CAN SAY. My zany for life 🫶🫶🫶🫶.",
+      text: "Thank you for everything zany. For loving me the way you do. For being the most amazing. The most caring. The best girlfriend I could ever ask for. Thank you for making me feel sooo loved even when we are thousands of kilometers apart. I'm always going to be here forever jaanu. You are my forever. It has been 3 months baby. We have a whole forever together ❤️❤️❤️. I LOVE YOU IMPOSSIBLY MUCH. I LOVE YOU MORE THAN I CAN SAY. My zany for life 🫶🫶🫶🫶.\n\nHappy 3 months Baby, I love you so much ❤️\nYour Hissy ❤️",
       photo: "petal5.jpg",
     },
   ],
-
-  /* ---------- What she sees once every petal is gone ---------- */
-  final: {
-    heading: "Happy 3 months Baby",
-    text: "I love you so much ❤️",
-    signoff: "Your Hissy ❤️",
-  },
 
   /* ---------- Music. Leave song as "" for a quiet page. ---------- */
   song: "",

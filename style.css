@@ -2340,3 +2340,44 @@ body.reading-m3:has(#lily-final:not([hidden])) .lily-svg {
    scroll container. 86vw leaves room for both margins. */
 .lily-card { padding: 4vh 4vw 5vh; }
 .lily-card-inner { width: min(86vw, 860px); }
+
+/* ---------- A tray that doesn't bully the bouquet ----------
+   It was a tall bordered panel with a line of text over large petals and a
+   button under them, and the flower kept shrinking to make room. Slimmer
+   now, and the flower gives up much less. */
+.lily-tray-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 12px;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 999px;
+}
+
+.lily-tray-label {
+    margin: 0;
+    font-size: clamp(11px, 2.7vw, 13px);
+    opacity: 0.8;
+}
+
+.lily-tray { gap: 7px; margin: 0; }
+
+.lily-tray-petal {
+    width: 21px;
+    height: 38px;
+    font-size: 14px;
+}
+
+.lily-reset {
+    margin: 0;
+    padding: 5px 13px;
+    font-size: clamp(11px, 2.7vw, 13px);
+}
+
+/* the last message lives on the sixth petal now, so nothing else needs room */
+body.reading-m3:has(.lily-tray-wrap:not([hidden])) .lily-svg {
+    height: auto;
+    max-height: 53svh;
+}

@@ -327,7 +327,6 @@
     const cardBody = document.getElementById("lily-card-body");
     const cardInner = document.querySelector(".lily-card-inner");
     const cardClose = document.getElementById("lily-card-close");
-    const finalEl = document.getElementById("lily-final");
 
     hintEl.textContent = LILY.hint || "";
 
@@ -415,15 +414,6 @@
       trayWrap.hidden = false;
     }
 
-    function finish() {
-      if (!LILY.final) return;
-      document.getElementById("lily-final-heading").textContent = LILY.final.heading || "";
-      document.getElementById("lily-final-text").textContent = LILY.final.text || "";
-      document.getElementById("lily-final-sign").textContent = LILY.final.signoff || "";
-      finalEl.hidden = false;
-      requestAnimationFrame(() => finalEl.classList.add("is-in"));
-    }
-
     // Only one petal at a time. The tepals overlap heavily, so without this
     // the same spot on screen belongs to the next petal down the moment the
     // one above it is taken -- tapping repeatedly in one place stripped the
@@ -444,7 +434,6 @@
       const land = () => {
         node.style.visibility = "hidden";
         addToTray(i);
-        if (picked.size === PETALS) setTimeout(finish, 700);
       };
 
       const release = () => { picking = false; };
@@ -518,8 +507,6 @@
 
       trayEl.textContent = "";
       trayWrap.hidden = true;
-      finalEl.hidden = true;
-      finalEl.classList.remove("is-in");
       promptEl.classList.remove("is-done");
     }
 
