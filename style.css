@@ -1360,3 +1360,313 @@ body.reading-m2 {
     .m2-book.opening .m2-cover { display: none; }
     .m2-ribbon { animation: none; }
 }
+
+/* ============================================================
+   MONTH THREE — the lily.
+   Same maroon world; a single flower she takes apart.
+   ============================================================ */
+:root {
+    --ly-night:  #3d0b1c;
+    --ly-deep:   #58122a;
+    --ly-paper:  #fdeef1;
+    --ly-ink:    #5a0d22;
+    --ly-soft:   #96566b;
+    --ly-pink:   #e892a6;
+}
+
+body.reading-m3 {
+    background:
+        radial-gradient(130% 78% at 50% 34%, #6a1733 0%, #4a0f22 44%, var(--ly-night) 100%);
+}
+
+.lily-page {
+    position: relative;
+    z-index: 10;
+    width: min(94vw, 760px);
+    margin: 0 auto;
+    padding: 4vh 0 9vh;
+    text-align: center;
+}
+
+/* a soft bloom of light behind the flower */
+.lily-glow {
+    position: absolute;
+    top: 6vh;
+    left: 50%;
+    width: min(86vw, 560px);
+    aspect-ratio: 1;
+    margin-left: min(-43vw, -280px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 146, 166, 0.3) 0%, rgba(232, 146, 166, 0) 68%);
+    pointer-events: none;
+}
+
+.lily-hint {
+    position: relative;
+    margin: 0 0 4px;
+    font-size: clamp(15px, 3.8vw, 19px);
+    letter-spacing: 1px;
+    color: var(--ly-pink);
+    animation: fadePulse 2.2s ease-in-out infinite;
+    transition: opacity 0.6s ease;
+}
+
+.lily-hint.is-done { opacity: 0; animation: none; }
+
+/* ---------- The flower ---------- */
+.lily-stage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.lily-svg {
+    width: min(86vw, 430px);
+    height: auto;
+    /* petals have to be able to fall outside the box */
+    overflow: visible;
+}
+
+.lily-figure {
+    transform-box: fill-box;
+    transform-origin: 50% 88%;
+    animation: lilySway 7s ease-in-out infinite;
+}
+
+@keyframes lilySway {
+    0%, 100% { transform: rotate(-1.3deg); }
+    50%      { transform: rotate(1.3deg); }
+}
+
+.lily-head {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: lilyBreathe 5.5s ease-in-out infinite;
+}
+
+@keyframes lilyBreathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.022); }
+}
+
+.lily-petal {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    cursor: pointer;
+    outline: none;
+}
+
+.lily-petal .lily-petal-shape {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform 0.3s ease;
+}
+
+.lily-petal:hover .lily-petal-shape,
+.lily-petal:focus-visible .lily-petal-shape { transform: scale(1.045); }
+
+.lily-petal:focus-visible .lily-shimmer { opacity: 0.4; }
+
+/* the hint that a petal can be taken */
+.lily-shimmer {
+    opacity: 0;
+    animation: lilyShimmer 3.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.lily-petal[data-i="1"] .lily-shimmer { animation-delay: 0.55s; }
+.lily-petal[data-i="2"] .lily-shimmer { animation-delay: 1.1s; }
+.lily-petal[data-i="3"] .lily-shimmer { animation-delay: 1.65s; }
+.lily-petal[data-i="4"] .lily-shimmer { animation-delay: 2.2s; }
+.lily-petal[data-i="5"] .lily-shimmer { animation-delay: 2.75s; }
+
+@keyframes lilyShimmer {
+    0%, 70%, 100% { opacity: 0; }
+    85%           { opacity: 0.26; }
+}
+
+.lily-petal.is-gone { cursor: default; }
+.lily-petal.is-gone .lily-shimmer { animation: none; opacity: 0; }
+
+/* ---------- The ones she has already taken ---------- */
+.lily-tray {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.lily-tray-petal {
+    width: 17px;
+    height: 32px;
+    padding: 0;
+    background: linear-gradient(180deg, #fff6f8 0%, #f7d3db 48%, #d98fa2 100%);
+    border: none;
+    border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+    box-shadow: 0 3px 7px rgba(20, 2, 10, 0.4);
+    cursor: pointer;
+    opacity: 0.85;
+    transform: rotate(var(--spin, 0deg));
+    transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.lily-tray-petal:hover,
+.lily-tray-petal:focus-visible {
+    opacity: 1;
+    transform: rotate(var(--spin, 0deg)) translateY(-3px) scale(1.12);
+    outline: none;
+}
+
+/* ---------- The card behind a petal ---------- */
+.lily-card {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5vw;
+    background: rgba(24, 3, 12, 0.76);
+    opacity: 0;
+    transition: opacity 0.28s ease;
+}
+
+.lily-card.is-open { opacity: 1; }
+
+.lily-card-inner {
+    position: relative;
+    width: min(92vw, 420px);
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: clamp(22px, 5vw, 32px);
+    background: var(--ly-paper);
+    border-radius: 4px;
+    box-shadow: 0 18px 46px rgba(14, 1, 7, 0.55);
+    color: var(--ly-ink);
+    text-align: center;
+    transform: translateY(14px) scale(0.97);
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lily-card.is-open .lily-card-inner { transform: none; }
+
+.lily-card-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    padding: 4px 8px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--ly-soft);
+    cursor: pointer;
+}
+
+.lily-card-title {
+    margin: 0 0 16px;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(17px, 3.8vw, 21px);
+    line-height: 1.3;
+    color: var(--ly-deep);
+}
+
+.lily-card-photo {
+    margin: 0 auto 18px;
+    width: min(82%, 260px);
+    padding: 9px 9px 7px;
+    background: #fffaf3;
+    box-shadow: 0 6px 16px rgba(20, 2, 10, 0.26);
+    transform: rotate(var(--tilt, -2deg));
+}
+
+.lily-card-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 38vh;
+    object-fit: cover;
+}
+
+.lily-card-missing {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 150px;
+    font-size: 11px;
+    line-height: 1.5;
+    white-space: pre-line;
+    color: var(--ly-soft);
+    background: rgba(217, 184, 146, 0.25);
+}
+
+.lily-card-photo figcaption {
+    margin-top: 7px;
+    font-family: "Caveat", cursive;
+    font-size: clamp(15px, 3vw, 18px);
+    color: var(--ly-soft);
+}
+
+.lily-card-text {
+    margin: 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(20px, 4.4vw, 25px);
+    line-height: 1.55;
+    white-space: pre-line;
+}
+
+/* ---------- Once every petal is gone ---------- */
+.lily-final {
+    margin-top: clamp(26px, 6vw, 44px);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lily-final.is-in { opacity: 1; transform: none; }
+
+.lily-final-heading {
+    margin: 0 0 14px;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(24px, 6vw, 38px);
+    line-height: 1.25;
+    color: var(--ly-paper);
+}
+
+.lily-final-text {
+    margin: 0 auto;
+    max-width: 34ch;
+    font-family: "Caveat", cursive;
+    font-size: clamp(20px, 4.6vw, 27px);
+    line-height: 1.5;
+    color: #f6dbe2;
+    white-space: pre-line;
+}
+
+.lily-final-sign {
+    margin: 16px 0 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(21px, 4.8vw, 28px);
+    color: var(--ly-pink);
+}
+
+.lily-mute {
+    margin-top: 26px;
+    padding: 7px 15px;
+    background: none;
+    border: 2px solid rgba(232, 146, 166, 0.45);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: clamp(12px, 2.8vw, 14px);
+    color: rgba(253, 238, 241, 0.7);
+    cursor: pointer;
+}
+
+.lily-mute.is-muted { opacity: 0.45; text-decoration: line-through; }
+
+@media (prefers-reduced-motion: reduce) {
+    .lily-figure, .lily-head, .lily-shimmer, .lily-hint { animation: none; }
+    .lily-card, .lily-card-inner, .lily-final { transition: none; }
+}

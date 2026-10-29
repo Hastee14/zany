@@ -8,10 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Yeseva+One&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Yeseva+One&family=Caveat:wght@400..700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=52" />
+    <link rel="stylesheet" href="style.css?v=54" />
   </head>
 
   <body>
@@ -167,9 +167,44 @@
       </div>
     </section>
 
+    <!-- ===================== 5. Month three: the lily ===================== -->
+    <section id="scene-lily" class="scene">
+      <div class="lily-page">
+        <div class="lily-glow" aria-hidden="true"></div>
+
+        <p class="lily-hint" id="lily-hint"></p>
+        <div class="lily-stage" id="lily-stage"></div>
+
+        <div class="lily-tray" id="lily-tray" hidden></div>
+
+        <section class="lily-final" id="lily-final" hidden>
+          <h2 class="lily-final-heading" id="lily-final-heading"></h2>
+          <p class="lily-final-text" id="lily-final-text"></p>
+          <p class="lily-final-sign" id="lily-final-sign"></p>
+        </section>
+
+        <button class="lily-mute" id="lily-mute" type="button" aria-label="Mute">&#9834;</button>
+      </div>
+
+      <div class="lily-card" id="lily-card" hidden>
+        <div class="lily-card-inner">
+          <button class="lily-card-close" id="lily-card-close" type="button" aria-label="Close">&times;</button>
+          <p class="lily-card-title" id="lily-card-title"></p>
+          <figure class="lily-card-photo" id="lily-card-photo">
+            <img id="lily-card-img" alt="" />
+            <span class="lily-card-missing" id="lily-card-missing" hidden></span>
+            <figcaption id="lily-card-cap"></figcaption>
+          </figure>
+          <p class="lily-card-text" id="lily-card-text"></p>
+        </div>
+      </div>
+    </section>
+
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
     <audio id="song" loop preload="auto"></audio>
-    <script src="script.js?v=52"></script>
+    <script src="lily.js?v=54"></script>
+    <script src="lily-ui.js?v=54"></script>
+    <script src="script.js?v=54"></script>
   </body>
 </html>
