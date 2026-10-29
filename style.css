@@ -1986,3 +1986,45 @@ body.reading-m3 {
     .lily-card-inner { aspect-ratio: 1.3; padding: 10% 9% 10% 21%; }
     .lily-card-photo { width: min(100%, 185px); }
 }
+
+/* ---------- Keeping the writing inside the outline ----------
+   The photo fitted, but the title and the note ran the full width of the
+   content box, and their corners sat outside the curve top and bottom.
+   Everything is capped to one narrow column now, centred in the roomiest
+   part of the petal, with more room above and below. */
+.lily-card-inner {
+    aspect-ratio: 1.38;
+    height: auto;
+    padding: 14% 12% 14% 18%;
+}
+
+.lily-card-title,
+.lily-card-text,
+.lily-card-photo {
+    width: min(100%, 246px);
+    max-width: min(100%, 246px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lily-card-photo { margin-bottom: 10px; }
+.lily-card-title { margin-bottom: 10px; }
+
+@media (max-width: 430px) {
+    .lily-card-inner { aspect-ratio: 1.22; padding: 13% 10% 13% 17%; }
+    .lily-card-title,
+    .lily-card-text,
+    .lily-card-photo { width: min(100%, 190px); max-width: min(100%, 190px); }
+}
+
+/* aspect-ratio pinned the height, so a longer note spilled past the outline
+   and got clipped. A minimum height instead: the petal keeps its landscape
+   shape at rest and simply grows taller when there is more to say. */
+.lily-card-inner {
+    aspect-ratio: auto;
+    min-height: min(68vw, 406px);
+}
+
+@media (max-width: 430px) {
+    .lily-card-inner { aspect-ratio: auto; min-height: 77vw; }
+}

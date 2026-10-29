@@ -24,37 +24,31 @@ const LILY = {
       title: "Petal one — REPLACE ME",
       text: "REPLACE ME. A few lines. The shorter the better -- this is a note, not a letter.",
       photo: "petal1.jpg",
-      caption: "us",
     },
     {
       title: "Petal two — REPLACE ME",
       text: "REPLACE ME.",
       photo: "petal2.jpg",
-      caption: "the library floor",
     },
     {
       title: "Petal three — REPLACE ME",
       text: "REPLACE ME.",
       photo: "petal3.jpg",
-      caption: "a heart, obviously",
     },
     {
       title: "Petal four — REPLACE ME",
       text: "REPLACE ME.",
       photo: "petal4.jpg",
-      caption: "just us",
     },
     {
       title: "Petal five — REPLACE ME",
       text: "REPLACE ME.",
       photo: "petal5.jpg",
-      caption: "late one night",
     },
     {
       title: "Petal six — REPLACE ME",
       text: "REPLACE ME.",
       photo: "petal6.jpg",
-      caption: "i ❤ biceps",
     },
   ],
 

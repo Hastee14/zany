@@ -336,7 +336,6 @@
     const cardPhoto = document.getElementById("lily-card-photo");
     const cardImg = document.getElementById("lily-card-img");
     const cardMissing = document.getElementById("lily-card-missing");
-    const cardCap = document.getElementById("lily-card-cap");
     const cardText = document.getElementById("lily-card-text");
     const cardClose = document.getElementById("lily-card-close");
     const finalEl = document.getElementById("lily-final");
@@ -355,13 +354,12 @@
 
       cardTitle.textContent = p.title || "";
       cardText.textContent = p.text || "";
-      cardCap.textContent = p.caption || "";
 
       if (p.photo) {
         cardPhoto.hidden = false;
         cardImg.hidden = false;
         cardMissing.hidden = true;
-        cardImg.alt = p.caption || "";
+        cardImg.alt = p.title || "";
         cardImg.onerror = () => {
           cardImg.hidden = true;
           cardMissing.hidden = false;
