@@ -1360,3 +1360,438 @@ body.reading-m2 {
     .m2-book.opening .m2-cover { display: none; }
     .m2-ribbon { animation: none; }
 }
+
+/* ============================================================
+   MONTH THREE — the scrapbook.
+   Same maroon world; the pages are cream paper stuck with
+   washi tape rather than a printed book.
+   ============================================================ */
+:root {
+    --sb-paper:   #f9ebdc;
+    --sb-paper-2: #f1dcc6;
+    --sb-kraft:   #d9b892;
+    --sb-ink:     #5a0d22;
+    --sb-ink-soft:#976074;
+    --sb-tape:    rgba(232, 146, 166, 0.55);
+    --sb-shadow:  rgba(30, 3, 14, 0.5);
+}
+
+body.reading-m3 {
+    background: var(--m2-ground) url("scrap-bg.svg") repeat;
+    background-size: 440px 440px;
+}
+
+.sb-wrap {
+    position: relative;
+    z-index: 10;
+    width: min(94vw, 1040px);
+    margin: 0 auto;
+    padding: 5vh 0 7vh;
+}
+
+/* ---------- The closed cover ---------- */
+.sb-cover {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: min(84vw, 420px);
+    aspect-ratio: 3 / 4;
+    margin: 0 auto;
+    padding: 30px;
+    background:
+        linear-gradient(90deg, #5e1427 0 20px, var(--m2-cover) 20px);
+    border: 3px solid var(--m2-pink);
+    border-radius: 6px 14px 14px 6px;
+    box-shadow: 10px 10px 0 var(--sb-shadow);
+    font-family: inherit;
+    color: var(--sb-paper);
+    cursor: pointer;
+    transform-origin: left center;
+    transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.9s ease;
+}
+
+.sb-cover-band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 46px;
+    width: 26px;
+    background: var(--sb-tape);
+}
+
+.sb-cover-title {
+    position: relative;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(34px, 9vw, 58px);
+    line-height: 1.1;
+}
+
+.sb-cover-est {
+    position: relative;
+    font-family: "Caveat", cursive;
+    font-size: clamp(20px, 5vw, 27px);
+    color: var(--m2-pink);
+}
+
+.sb-cover-open {
+    position: absolute;
+    bottom: 26px;
+    font-size: clamp(12px, 3vw, 15px);
+    letter-spacing: 1px;
+    color: rgba(249, 235, 220, 0.72);
+    animation: fadePulse 2s ease-in-out infinite;
+}
+
+.sb-cover.is-open {
+    transform: perspective(1600px) rotateY(-118deg);
+    opacity: 0;
+}
+
+/* ---------- The open book ---------- */
+.sb-stage {
+    position: relative;
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    perspective: 2200px;
+}
+
+.sb-slot {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 520px;
+}
+
+.sb-slot--right { border-left: 2px solid rgba(90, 13, 34, 0.14); }
+
+.sb-flip {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* the leaf occupies the right half going forward, the left half going back */
+    left: 50%;
+    right: 0;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    transition: transform 0.72s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+    z-index: 5;
+}
+
+.sb-flip.is-turning { transform: rotateY(-180deg); }
+
+.sb-flip--back {
+    left: 0;
+    right: 50%;
+    transform-origin: right center;
+}
+
+.sb-flip--back.is-turning { transform: rotateY(180deg); }
+
+.sb-flip-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.sb-flip-back { transform: rotateY(180deg); }
+
+/* one page at a time on a phone */
+@media (max-width: 899px) {
+    .sb-slot { max-width: none; }
+    .sb-flip, .sb-flip--back { left: 0; right: 0; transform-origin: left center; }
+    .sb-flip--back { transform-origin: right center; }
+}
+
+/* ---------- A page ---------- */
+.sb-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(12px, 2.4vw, 20px);
+    min-height: clamp(430px, 64vh, 610px);
+    height: 100%;
+    padding: clamp(22px, 4vw, 38px);
+    background:
+        repeating-linear-gradient(
+            101deg,
+            rgba(217, 184, 146, 0.07) 0 2px,
+            transparent 2px 7px
+        ),
+        linear-gradient(168deg, var(--sb-paper) 0%, var(--sb-paper-2) 100%);
+    border: 2px solid rgba(217, 184, 146, 0.5);
+    box-shadow: 0 6px 20px rgba(30, 3, 14, 0.22);
+    color: var(--sb-ink);
+    text-align: center;
+    overflow: hidden;
+}
+
+.sb-slot.is-blank::after {
+    content: "";
+    display: block;
+    min-height: clamp(430px, 64vh, 610px);
+}
+
+.sb-heading {
+    margin: 0;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(19px, 3.4vw, 26px);
+    line-height: 1.25;
+    color: var(--m2-cover);
+}
+
+.sb-text {
+    margin: 0;
+    max-width: 42ch;
+    font-family: "Caveat", cursive;
+    font-size: clamp(19px, 3.4vw, 24px);
+    line-height: 1.5;
+    color: var(--sb-ink);
+    white-space: pre-line;
+}
+
+/* ---------- Photos, stuck in by hand ---------- */
+.sb-photos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(12px, 2.6vw, 22px);
+    width: 100%;
+}
+
+.sb-photo {
+    position: relative;
+    margin: 0;
+    padding: 9px 9px 7px;
+    background: #fffaf3;
+    box-shadow: 0 5px 14px rgba(30, 3, 14, 0.3);
+    transform: rotate(var(--tilt, 0deg));
+    cursor: zoom-in;
+}
+
+.sb-tape {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    width: 64px;
+    height: 22px;
+    margin-left: -32px;
+    background: var(--sb-tape);
+    transform: rotate(var(--tape-tilt, 0deg));
+}
+
+.sb-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 34vh;
+    object-fit: cover;
+}
+
+.sb-missing {
+    display: grid;
+    place-items: center;
+    width: 150px;
+    height: 110px;
+    font-size: 11px;
+    line-height: 1.5;
+    white-space: pre-line;
+    color: var(--sb-ink-soft);
+    background: rgba(217, 184, 146, 0.25);
+}
+
+.sb-caption {
+    margin: 7px 0 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(15px, 2.6vw, 19px);
+    color: var(--sb-ink-soft);
+}
+
+.sb-layout--solo .sb-photo { width: min(78%, 330px); }
+.sb-layout--pair .sb-photo { width: min(44%, 210px); }
+.sb-layout--trio .sb-photo { width: min(30%, 165px); }
+
+/* ---------- Doodles ---------- */
+.sb-doodle {
+    width: 26px;
+    height: 26px;
+    color: var(--m2-pink);
+    opacity: 0.75;
+}
+
+.sb-doodle--big { width: 46px; height: 46px; opacity: 0.9; }
+
+.sb-doodle--stuck { position: absolute; }
+.sb-doodle--1 { top: 16px; right: 18px; transform: rotate(14deg); }
+.sb-doodle--2 { bottom: 18px; left: 16px; transform: rotate(-11deg); }
+.sb-doodle--3 { top: 44%; left: 12px; transform: rotate(7deg); }
+
+/* ---------- Divider, ending, coming soon, back cover ---------- */
+.sb-divider-dates {
+    margin: 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(19px, 3.6vw, 25px);
+    color: var(--sb-ink-soft);
+}
+
+.sb-divider-title {
+    margin: 0;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(36px, 7.6vw, 60px);
+    line-height: 1.1;
+    color: var(--m2-cover);
+}
+
+.sb-end-heading {
+    margin: 0;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(23px, 4.4vw, 34px);
+    line-height: 1.3;
+    color: var(--m2-cover);
+}
+
+.sb-end-note {
+    margin: 0;
+    max-width: 36ch;
+    font-family: "Caveat", cursive;
+    font-size: clamp(19px, 3.4vw, 24px);
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.sb-end-sign {
+    margin: 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(22px, 4vw, 29px);
+    color: var(--m2-cover);
+}
+
+.sb-page--soon {
+    background:
+        repeating-linear-gradient(
+            180deg,
+            transparent 0 36px,
+            rgba(90, 13, 34, 0.08) 36px 37px
+        ),
+        linear-gradient(168deg, var(--sb-paper) 0%, var(--sb-paper-2) 100%);
+}
+
+.sb-soon-label {
+    margin: 0;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(26px, 5.4vw, 40px);
+    color: rgba(90, 13, 34, 0.3);
+}
+
+.sb-soon-note {
+    margin: 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(18px, 3.2vw, 22px);
+    color: var(--sb-ink-soft);
+}
+
+.sb-page--back {
+    background: linear-gradient(90deg, #5e1427 0 18px, var(--m2-cover) 18px);
+    border-color: var(--m2-pink);
+}
+
+.sb-back-text {
+    margin: 0;
+    max-width: 22ch;
+    font-family: "Yeseva One", Georgia, serif;
+    font-size: clamp(22px, 4.4vw, 32px);
+    line-height: 1.35;
+    color: var(--sb-paper);
+}
+
+/* ---------- Controls ---------- */
+.sb-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 4vw, 30px);
+    margin-top: 22px;
+}
+
+.sb-nav {
+    width: 46px;
+    height: 46px;
+    background: var(--m2-cover);
+    border: 3px solid var(--m2-pink);
+    border-radius: 50%;
+    box-shadow: 4px 4px 0 var(--sb-shadow);
+    font-family: inherit;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--sb-paper);
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.sb-nav:hover:not(:disabled) { transform: translateY(-2px); }
+.sb-nav:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--sb-shadow); }
+.sb-nav:disabled { opacity: 0.3; cursor: default; }
+
+.sb-counter {
+    margin: 0;
+    min-width: 76px;
+    font-size: clamp(13px, 3vw, 16px);
+    letter-spacing: 1px;
+    color: var(--m2-pink);
+}
+
+.sb-mute {
+    display: block;
+    margin: 16px auto 0;
+    padding: 7px 15px;
+    background: none;
+    border: 2px solid rgba(232, 146, 166, 0.5);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: clamp(12px, 2.8vw, 14px);
+    color: rgba(249, 235, 220, 0.75);
+    cursor: pointer;
+}
+
+.sb-mute.is-muted { opacity: 0.45; text-decoration: line-through; }
+
+/* ---------- Tap a photo to see it properly ---------- */
+.sb-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 5vw;
+    background: rgba(26, 4, 13, 0.93);
+    cursor: zoom-out;
+}
+
+.sb-lightbox img {
+    max-width: 100%;
+    max-height: 78vh;
+    border: 7px solid #fffaf3;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+
+.sb-lightbox p {
+    margin: 0;
+    font-family: "Caveat", cursive;
+    font-size: clamp(19px, 4vw, 26px);
+    color: var(--sb-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sb-cover, .sb-flip { transition: none; }
+    .sb-cover-open { animation: none; }
+}
