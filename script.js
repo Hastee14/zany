@@ -1229,6 +1229,67 @@ let songWanted = false; // has she left the music switched on?
 
 let songStart = 0; // where this track comes in, in seconds
 
+// iOS Safari ignores HTMLMediaElement.volume -- it is read-only there, so a
+// quieter letter stayed at full system volume on her phone while being fine on
+// a laptop. Routing the element through a gain node gives a level that iOS
+// does respect. Built once; the element can only ever have one source node.
+let audioCtx = null;
+let songGain = null;
+let routeTried = false;
+
+function songOutput() {
+  if (songGain || routeTried) return songGain;
+  routeTried = true;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    audioCtx = new AC();
+    const source = audioCtx.createMediaElementSource(song);
+    songGain = audioCtx.createGain();
+    songGain.gain.value = 0;
+    source.connect(songGain).connect(audioCtx.destination);
+    return songGain;
+  } catch (e) {
+    // No Web Audio: fall back to .volume, which at least works off iOS.
+    return null;
+  }
+}
+
+function wakeAudio() {
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume().catch(() => { });
+}
+
+function setSongLevel(v) {
+  if (songGain) {
+    songGain.gain.value = v;
+    return;
+  }
+  song.volume = v;
+}
+
+function songLevel() {
+  return songGain ? songGain.gain.value : song.volume;
+}
+
+// The level used to be raised only inside play()'s promise. If that promise
+// is slow or never settles the gain stays at zero, which is silence -- worse
+// than a sudden start. So the fade can also be kicked off by the element
+// actually playing, whichever happens first.
+let fading = null;
+
+function fadeUp(target) {
+  if (fading) return;
+  wakeAudio();
+  const step = target / 40;
+  fading = setInterval(() => {
+    setSongLevel(Math.min(target, songLevel() + step));
+    if (songLevel() >= target - 0.0001) {
+      clearInterval(fading);
+      fading = null;
+    }
+  }, 50);
+}
+
 function startMusic(src, startAt, vol) {
   const track = src || CONFIG.song;
   if (!track) return;
@@ -1240,7 +1301,13 @@ function startMusic(src, startAt, vol) {
   songStart = Number(startAt) || 0;
 
   song.src = track;
-  song.volume = 0;
+  // Through the gain node the element itself stays open; the level is the gain.
+  const routed = songOutput();
+  song.volume = routed ? 1 : 0;
+  setSongLevel(0);
+  wakeAudio();
+
+  song.addEventListener("playing", () => fadeUp(target), { once: true });
 
   if (songStart) {
     // Handle the wrap ourselves. `loop` always restarts at 0, and the guard
@@ -1299,11 +1366,7 @@ function startMusic(src, startAt, vol) {
       songWanted = true;
       musicToggle.hidden = false;
       // Fade in so it doesn't blast her
-      const step = target / 40;
-      const fade = setInterval(() => {
-        song.volume = Math.min(target, song.volume + step);
-        if (song.volume >= target) clearInterval(fade);
-      }, 50);
+      fadeUp(target);
     })
     .catch(() => {
       // Autoplay blocked or the file is missing — no music, no problem
@@ -1328,6 +1391,7 @@ document.addEventListener("visibilitychange", () => {
     pausedByLeaving = false;
     // only if she hadn't muted it herself before leaving
     if (songWanted && !musicToggle.classList.contains("is-muted")) {
+      wakeAudio();
       song.play().catch(() => { });
     }
   }
@@ -1372,6 +1436,7 @@ musicToggle.addEventListener("click", (e) => {
   e.stopPropagation();
   if (song.paused) {
     songWanted = true;
+    wakeAudio();
     song.play().catch(() => { });
     musicToggle.classList.remove("is-muted");
   } else {
