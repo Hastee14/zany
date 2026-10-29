@@ -18,7 +18,6 @@ const SHELF = {
   cards: [
     { key: "m1", label: "month one", sub: "30 august" },
     { key: "m2", label: "month two", sub: "30 september" },
-    { key: "m3", label: "month three", sub: "30 october" },
   ],
 };
 
@@ -214,17 +213,6 @@ const CONFIG = {
   /* ---------- Music: your mp3, in this folder ---------- */
   song: "song.mp3",
   volume: 0.4,
-};
-
-/* ============================================================================
-   ✏️  MONTH THREE — the scrapbook. Its pages live in scrapbook.js.
-   ============================================================================ */
-const MONTH3 = {
-  password: "6767",
-  occasion: "three months",
-  lockTitle: "this one's locked too",
-  lockHint: "same number ❀",
-  lockError: "not quite. try again ❀",
 };
 
 /* ============================================================================
@@ -875,7 +863,6 @@ askCard.addEventListener("click", () => {
    ============================================================================ */
 const shelfScene = document.getElementById("scene-shelf");
 const month2Page = document.getElementById("scene-month2");
-const scrapbookPage = document.getElementById("scene-scrapbook");
 
 // One entry per card on the shelf. `scene` is the page its PIN opens.
 const LETTERS = {
@@ -904,27 +891,12 @@ const LETTERS = {
     books: 0.32,
     opensLikeABook: true,
   },
-  m3: {
-    password: MONTH3.password,
-    occasion: MONTH3.occasion,
-    lockTitle: MONTH3.lockTitle,
-    lockHint: MONTH3.lockHint,
-    lockError: MONTH3.lockError,
-    scene: scrapbookPage,
-    song: (typeof SCRAPBOOK !== "undefined" && SCRAPBOOK.song) || CONFIG.song,
-    songStart: (typeof SCRAPBOOK !== "undefined" && SCRAPBOOK.songStart) || 0,
-    bodyClass: "reading reading-m3",
-    books: 0.18,
-    onOpen: () => {
-      if (typeof window.initScrapbook === "function") window.initScrapbook();
-    },
-  },
 };
 
 let active = null; // the letter she picked, until she gets the PIN right
 
 function showScene(scene) {
-  [shelfScene, lockScene, letterPage, month2Page, scrapbookPage].forEach((s) => {
+  [shelfScene, lockScene, letterPage, month2Page].forEach((s) => {
     if (s) s.classList.remove("is-active", "leaving");
   });
   scene.classList.add("is-active");
@@ -1019,8 +991,6 @@ function openLetter() {
       setTimeout(dropCover, 2600);
     }
   }
-
-  if (typeof active.onOpen === "function") active.onOpen();
   heartRate = 0.5;
 
   document.body.classList.add(...active.bodyClass.split(" "));
