@@ -99,9 +99,26 @@
   function buildPetal(i) {
     // The rotation lives on an inner group so the outer one is free to be
     // animated: a petal has to fall DOWN the screen, whichever way it points.
+    const rot = i * (360 / PETALS);
     const outer = make("g", { class: "lily-petal", "data-i": i, tabindex: "0", role: "button" });
-    const spun = make("g", { transform: "rotate(" + i * (360 / PETALS) + ")" });
+    outer.setAttribute("aria-label", "Pick petal " + (i + 1));
+    const spun = make("g", { transform: "rotate(" + rot + ")" });
     spun.appendChild(petalShape(i + 1, false));
+
+    // The number rides out along the petal, then turns back the other way so
+    // it reads upright whichever direction its petal happens to point.
+    const badge = make("g", {
+      class: "lily-number",
+      transform: "translate(0,-82) rotate(" + -rot + ")",
+    });
+    badge.appendChild(make("circle", { r: 15, fill: "rgba(109,15,43,.5)" }));
+    const num = make("text", {
+      x: 0, y: 6.5, "text-anchor": "middle", "font-size": 19, fill: "#fff6f8",
+    });
+    num.textContent = String(i + 1);
+    badge.appendChild(num);
+    spun.appendChild(badge);
+
     outer.appendChild(spun);
     return outer;
   }
@@ -333,6 +350,7 @@
     const resetBtn = document.getElementById("lily-reset");
     const cardEl = document.getElementById("lily-card");
     const cardTitle = document.getElementById("lily-card-title");
+    const cardNum = document.getElementById("lily-card-num");
     const cardPhoto = document.getElementById("lily-card-photo");
     const cardImg = document.getElementById("lily-card-img");
     const cardMissing = document.getElementById("lily-card-missing");
@@ -352,6 +370,7 @@
       const p = data[i];
       if (!p) return;
 
+      cardNum.textContent = String(i + 1);
       cardTitle.textContent = p.title || "";
       cardText.textContent = p.text || "";
 
@@ -396,6 +415,7 @@
       const b = document.createElement("button");
       b.type = "button";
       b.className = "lily-tray-petal";
+      b.textContent = String(i + 1);
       b.setAttribute("aria-label", "Read " + (data[i] && data[i].title ? data[i].title : "petal " + (i + 1)) + " again");
       b.style.setProperty("--spin", (i * 23) % 40 - 20 + "deg");
       b.addEventListener("click", () => { if (cardEl.hidden) showCard(i); });

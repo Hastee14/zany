@@ -2028,3 +2028,104 @@ body.reading-m3 {
 @media (max-width: 430px) {
     .lily-card-inner { aspect-ratio: auto; min-height: 77vw; }
 }
+
+/* ---------- Numbers, and an image that earns its space ---------- */
+.lily-number { pointer-events: none; }
+.lily-number text { font-family: "Pixelify Sans", monospace; font-weight: 600; }
+.lily-petal.is-gone .lily-number { display: none; }
+
+.lily-tray-petal {
+    display: grid;
+    place-items: center;
+    font-family: "Pixelify Sans", monospace;
+    font-size: 15px;
+    color: #7a1230;
+}
+
+.lily-card-num {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    background: rgba(109, 15, 43, 0.5);
+    font-family: "Pixelify Sans", monospace;
+    font-size: 16px;
+    color: #fff6f8;
+}
+
+/* The photo is the point of the card -- it gets the width, the writing
+   fits around it. Driven by one variable so it can be measured. */
+.lily-card-inner { --petal-col: 60%; }
+
+.lily-card-title,
+.lily-card-text,
+.lily-card-photo {
+    width: var(--petal-col);
+    max-width: var(--petal-col);
+}
+
+.lily-card-title { font-size: clamp(12px, 2.6vw, 15px); margin-bottom: 8px; }
+.lily-card-text { font-size: clamp(13px, 2.9vw, 16px); }
+
+@media (max-width: 430px) {
+    .lily-card-title,
+    .lily-card-text,
+    .lily-card-photo { width: var(--petal-col); max-width: var(--petal-col); }
+}
+
+/* The number sits beside the title rather than above it: a stacked badge
+   cost ~38px of height, and height is exactly what the image wants. */
+.lily-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: var(--petal-col);
+    max-width: var(--petal-col);
+    margin: 0 auto 9px;
+}
+
+.lily-card-num {
+    flex: 0 0 auto;
+    width: 23px;
+    height: 23px;
+    margin: 0;
+    font-size: 13px;
+}
+
+.lily-card-title {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    text-align: left;
+}
+
+/* A bigger petal so the photo can be bigger in absolute terms: the limit on
+   the column is the petal's width where the photo sits, so growing the whole
+   shape is the only way to grow the picture. */
+.lily-card-inner {
+    width: min(94vw, 640px);
+    min-height: min(68vw, 464px);
+    --petal-col: 82%;
+}
+
+@media (max-width: 430px) {
+    .lily-card-inner {
+        min-height: 77vw;
+        padding: 12% 8% 12% 15%;
+        --petal-col: 74%;
+    }
+}
+
+/* Measured: 74% on a phone overflows once the note runs long. 70% holds for
+   both. Desktop's 82% was measured clear at every width tested. */
+@media (max-width: 430px) {
+    .lily-card-inner { --petal-col: 70%; }
+}
+
+/* The narrowest phones (360px and under) need another step down again. */
+@media (max-width: 375px) {
+    .lily-card-inner { --petal-col: 62%; padding: 12% 7% 12% 14%; }
+}
