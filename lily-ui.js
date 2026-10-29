@@ -99,7 +99,10 @@
   function buildPetal(i) {
     // The rotation lives on an inner group so the outer one is free to be
     // animated: a petal has to fall DOWN the screen, whichever way it points.
-    const rot = i * (360 / PETALS);
+    // Numbering starts at the bottom-left petal and works round clockwise --
+    // up the left, over the top, down the right -- so the sixth is the one at
+    // the bottom. 240deg is the 8 o'clock position.
+    const rot = 240 + i * (360 / PETALS);
     const outer = make("g", { class: "lily-petal", "data-i": i, tabindex: "0", role: "button" });
     outer.setAttribute("aria-label", "Pick petal " + (i + 1));
     const spun = make("g", { transform: "rotate(" + rot + ")" });
@@ -109,11 +112,10 @@
     // it reads upright whichever direction its petal happens to point.
     const badge = make("g", {
       class: "lily-number",
-      transform: "translate(0,-82) rotate(" + -rot + ")",
+      transform: "translate(0,-88) rotate(" + -rot + ")",
     });
-    badge.appendChild(make("circle", { r: 15, fill: "rgba(109,15,43,.5)" }));
     const num = make("text", {
-      x: 0, y: 6.5, "text-anchor": "middle", "font-size": 19, fill: "#fff6f8",
+      x: 0, y: 7, "text-anchor": "middle", "font-size": 26, fill: "#a8374f",
     });
     num.textContent = String(i + 1);
     badge.appendChild(num);

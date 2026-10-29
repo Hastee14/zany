@@ -2129,3 +2129,30 @@ body.reading-m3 {
 @media (max-width: 375px) {
     .lily-card-inner { --petal-col: 62%; padding: 12% 7% 12% 14%; }
 }
+
+/* ---------- The numbers, quieter ----------
+   A handwritten face rather than the pixel one, no disc behind them, and
+   faint enough to be a marker rather than a label. */
+.lily-number text {
+    font-family: "Caveat", cursive;
+    font-weight: 600;
+    opacity: 0.5;
+}
+
+.lily-tray-petal {
+    font-family: "Caveat", cursive;
+    font-weight: 600;
+    font-size: 19px;
+    color: rgba(122, 18, 48, 0.55);
+}
+
+.lily-card-num {
+    width: auto;
+    height: auto;
+    background: none;
+    border-radius: 0;
+    font-family: "Caveat", cursive;
+    font-weight: 600;
+    font-size: 21px;
+    color: rgba(122, 18, 48, 0.5);
+}
