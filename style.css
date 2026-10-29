@@ -1757,3 +1757,37 @@ body.reading-m3 {
     .lily-arrow, .lily-outline { animation: none; }
     .lily-outline { opacity: 0.5; }
 }
+
+/* ---------- Month three, take three ---------- */
+
+/* The tile is transparent, so one file dresses several grounds. */
+body:not(.reading) {
+    /* a veil over the tile: dense enough to feel planted, quiet enough to
+       read the cards against */
+    background:
+        linear-gradient(rgba(44, 5, 16, 0.44), rgba(44, 5, 16, 0.44)),
+        url("bloom-bg.svg") repeat,
+        var(--bg);
+    background-size: auto, 460px 460px, auto;
+}
+
+body.reading-m3 {
+    background:
+        linear-gradient(rgba(46, 7, 20, 0.46), rgba(46, 7, 20, 0.46)),
+        url("bloom-bg.svg") repeat,
+        radial-gradient(130% 78% at 50% 32%, #6a1733 0%, #4a0f22 46%, var(--ly-night) 100%);
+    background-size: auto, 460px 460px, auto;
+}
+
+/* the bouquet is hand-tied now, so nothing should swallow pointer events
+   that the flower itself needs */
+.lily-fillers, .lily-wrap { pointer-events: none; }
+
+/* The card arrives as the petal is still growing, so it should feel like the
+   same object rather than a second one. */
+.lily-card-inner {
+    transform: translateY(10px) scale(0.86);
+    transition: transform 0.46s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.46s ease;
+}
+
+.lily-card { transition: opacity 0.42s ease; }

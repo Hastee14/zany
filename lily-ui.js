@@ -218,56 +218,37 @@
     return g;
   }
 
-  // Paper, not a pot: two sheets, creased, narrowing to the tie.
+  // Hand-tied: the stems stay on show, gathered and ribboned. No paper.
   function wrap() {
     const g = make("g", { class: "lily-wrap" });
 
-    // the sheet behind, showing past the front one on both sides
-    g.appendChild(make("path", {
-      d: "M-132,172 L-96,196 L-54,174 L-8,200 L40,176 L88,198 L130,170 " +
-         "L34,348 C12,358 -12,358 -34,348 Z",
-      fill: "#5c1326", opacity: 0.92,
-    }));
+    // the cut ends below the tie
+    [-16, -6, 4, 14].forEach((x, i) => {
+      g.appendChild(make("path", {
+        d: "M" + x + "," + (TIE_Y - 6) + " C" + (x - 3) + "," + (TIE_Y + 40) + " " +
+           (x - 7 + i * 2) + "," + (TIE_Y + 70) + " " + (x - 10 + i * 3) + "," + (TIE_Y + 96),
+        fill: "none", stroke: "url(#lilyStem)", "stroke-width": 5 - i * 0.3,
+        "stroke-linecap": "round", opacity: 0.9,
+      }));
+    });
 
-    // the sheet in front, its top edge folded into points
+    // ribbon round the gather, with tails
     g.appendChild(make("path", {
-      d: "M-108,196 L-74,222 L-34,198 L8,224 L50,200 L92,220 L106,196 " +
-         "L28,344 C10,352 -10,352 -28,344 Z",
-      fill: "url(#lilyWrap)",
-    }));
-
-    // creases running down to the point
-    [[-70, 224, -18, 340], [-24, 206, -7, 344], [22, 214, 8, 344], [68, 216, 19, 340]]
-      .forEach(([x1, y1, x2, y2]) => {
-        g.appendChild(make("path", {
-          d: "M" + x1 + "," + y1 + " L" + x2 + "," + y2,
-          stroke: "#e892a6", "stroke-width": 1.5, opacity: 0.26, fill: "none",
-        }));
-      });
-
-    // a highlight along the folded edge
-    g.appendChild(make("path", {
-      d: "M-108,196 L-74,222 L-34,198 L8,224 L50,200 L92,220 L106,196",
-      fill: "none", stroke: "#f0aebd", "stroke-width": 2.6, opacity: 0.7,
-    }));
-
-    // ribbon, with tails
-    g.appendChild(make("path", {
-      d: "M-8,278 C-28,312 -34,338 -22,356", fill: "none",
+      d: "M-7,282 C-26,312 -31,338 -20,358", fill: "none",
       stroke: "#e892a6", "stroke-width": 5, "stroke-linecap": "round", opacity: 0.9,
     }));
     g.appendChild(make("path", {
-      d: "M8,278 C30,310 38,336 28,358", fill: "none",
+      d: "M7,282 C28,310 35,336 26,360", fill: "none",
       stroke: "#f0aebd", "stroke-width": 5, "stroke-linecap": "round", opacity: 0.9,
     }));
-    g.appendChild(make("rect", { x: -42, y: 264, width: 84, height: 13, rx: 6.5, fill: "#e892a6" }));
+    g.appendChild(make("rect", { x: -34, y: 266, width: 68, height: 14, rx: 7, fill: "#e892a6" }));
     g.appendChild(make("path", {
-      d: "M-8,271 C-30,254 -50,258 -52,271 C-50,285 -30,288 -8,272 Z", fill: "#f0aebd",
+      d: "M-7,273 C-28,256 -48,260 -50,273 C-48,287 -28,290 -7,274 Z", fill: "#f0aebd",
     }));
     g.appendChild(make("path", {
-      d: "M8,271 C30,254 50,258 52,271 C50,285 30,288 8,272 Z", fill: "#f0aebd",
+      d: "M7,273 C28,256 48,260 50,273 C48,287 28,290 7,274 Z", fill: "#f0aebd",
     }));
-    g.appendChild(make("circle", { cx: 0, cy: 271, r: 6.5, fill: "#f6dbe2" }));
+    g.appendChild(make("circle", { cx: 0, cy: 273, r: 6.5, fill: "#f6dbe2" }));
     return g;
   }
 
@@ -335,44 +316,6 @@
     return { svg, petals };
   }
 
-  /* ---------------------------------------------------------------- sound */
-  let audioCtx = null;
-  let muted = false;
-
-  // A soft plucked note, synthesised rather than downloaded.
-  function pluckSound() {
-    if (muted) return;
-    try {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      if (!audioCtx) audioCtx = new AC();
-      if (audioCtx.state === "suspended") audioCtx.resume();
-
-      const now = audioCtx.currentTime;
-      const notes = [523.25, 587.33, 659.25, 783.99, 880.0];
-      const f = notes[Math.floor(Math.random() * notes.length)];
-
-      const osc = audioCtx.createOscillator();
-      osc.type = "triangle";
-      osc.frequency.value = f;
-
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.14, now + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
-
-      const soft = audioCtx.createBiquadFilter();
-      soft.type = "lowpass";
-      soft.frequency.value = 2400;
-
-      osc.connect(soft).connect(gain).connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 1.2);
-    } catch (e) {
-      /* no sound is fine */
-    }
-  }
-
   /* ----------------------------------------------------------------- page */
   function init() {
     const scene = document.getElementById("scene-lily");
@@ -395,7 +338,6 @@
     const cardText = document.getElementById("lily-card-text");
     const cardClose = document.getElementById("lily-card-close");
     const finalEl = document.getElementById("lily-final");
-    const muteBtn = document.getElementById("lily-mute");
 
     hintEl.textContent = LILY.hint || "";
 
@@ -456,7 +398,7 @@
       b.className = "lily-tray-petal";
       b.setAttribute("aria-label", "Read " + (data[i] && data[i].title ? data[i].title : "petal " + (i + 1)) + " again");
       b.style.setProperty("--spin", (i * 23) % 40 - 20 + "deg");
-      b.addEventListener("click", () => showCard(i));
+      b.addEventListener("click", () => { if (cardEl.hidden) showCard(i); });
       trayEl.appendChild(b);
       trayEl.hidden = false;
     }
@@ -470,49 +412,73 @@
       requestAnimationFrame(() => finalEl.classList.add("is-in"));
     }
 
+    // Only one petal at a time. The tepals overlap heavily, so without this
+    // the same spot on screen belongs to the next petal down the moment the
+    // one above it is taken -- tapping repeatedly in one place stripped the
+    // whole flower before she had read a word.
+    let picking = false;
+
     function pick(i, node) {
-      if (picked.has(i)) return;
+      if (picked.has(i) || picking || !cardEl.hidden) return;
       picked.add(i);
+      picking = true;
 
       node.classList.add("is-gone");
       node.setAttribute("tabindex", "-1");
       node.style.pointerEvents = "none";
       promptEl.classList.add("is-done");
-      pluckSound();
 
       const land = () => {
         node.style.visibility = "hidden";
         addToTray(i);
-        showCard(i);
-        if (picked.size === PETALS) setTimeout(finish, 400);
+        if (picked.size === PETALS) setTimeout(finish, 700);
       };
+
+      const release = () => { picking = false; };
 
       if (reduce || typeof node.animate !== "function") {
         land();
+        showCard(i);
+        release();
         return;
       }
 
-      // Falls, drifting side to side and turning over, like a real one.
+      // It comes off the flower, turns over once, then grows towards her --
+      // it is being handed over to be read, not dropped on the floor.
       const drift = i % 2 ? -1 : 1;
       const anim = node.animate(
         [
-          { transform: "translate(0px, 0px) rotate(0deg)", opacity: 1 },
-          { transform: "translate(" + 26 * drift + "px, 130px) rotate(" + 58 * drift + "deg)", opacity: 1, offset: 0.35 },
-          { transform: "translate(" + -34 * drift + "px, 320px) rotate(" + 150 * drift + "deg)", opacity: 0.8, offset: 0.7 },
-          { transform: "translate(" + 14 * drift + "px, 540px) rotate(" + 236 * drift + "deg)", opacity: 0 },
+          { transform: "translate(0px,0px) rotate(0deg) scale(1)", opacity: 1, offset: 0 },
+          {
+            transform: "translate(" + 16 * drift + "px,62px) rotate(" + 34 * drift + "deg) scale(1.12)",
+            opacity: 1, offset: 0.3,
+          },
+          {
+            transform: "translate(" + 6 * drift + "px,34px) rotate(" + 8 * drift + "deg) scale(2.1)",
+            opacity: 1, offset: 0.62,
+          },
+          {
+            transform: "translate(0px,6px) rotate(0deg) scale(3.6)",
+            opacity: 0, offset: 1,
+          },
         ],
-        { duration: 1500, easing: "cubic-bezier(.33,.08,.5,1)", fill: "forwards" }
+        { duration: 1300, easing: "cubic-bezier(.34,.05,.3,1)", fill: "forwards" }
       );
+
+      // The card takes over while the petal is still growing, so the two read
+      // as one movement rather than two.
+      setTimeout(() => showCard(i), 860);
 
       let landed = false;
       const once = () => {
         if (landed) return;
         landed = true;
         land();
+        release();
       };
       anim.onfinish = once;
       // The card must open even if the animation never reports finishing.
-      setTimeout(once, 1700);
+      setTimeout(once, 1500);
     }
 
     petals.forEach((node, i) => {
@@ -523,12 +489,6 @@
           pick(i, node);
         }
       });
-    });
-
-    muteBtn.addEventListener("click", () => {
-      muted = !muted;
-      muteBtn.classList.toggle("is-muted", muted);
-      muteBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
     });
 
     document.addEventListener("keydown", (e) => {
