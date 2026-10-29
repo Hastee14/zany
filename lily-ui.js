@@ -166,65 +166,114 @@
     }));
     return g;
   }
-
-  function leaf(x, y, rot, scale) {
+  function leaf(x, y, rot, scale, shade) {
     return make("path", {
-      d: "M0,0 C34,-16 78,-10 104,16 C72,38 30,30 0,6 Z",
-      fill: "url(#lilyLeaf)",
+      d: "M0,0 C36,-18 84,-12 112,16 C78,40 32,32 0,6 Z",
+      fill: shade || "url(#lilyLeaf)",
       transform: "translate(" + x + "," + y + ") rotate(" + rot + ") scale(" + scale + ")",
     });
   }
 
-  // Stems all converging on the point where the bunch is tied.
-  function stems() {
-    const g = make("g", { class: "lily-stems" });
-    const TIE_X = 0, TIE_Y = 268;
-    [
-      [0, 40, 9], [-128, 96, 6.5], [132, 78, 6.5],
-      [-156, -16, 5.5], [162, -28, 5.5], [-30, 120, 5], [38, 130, 5],
-    ].forEach(([x, y, w]) => {
+  // Gypsophila: the little clouds of white that make a bunch look like a
+  // bouquet rather than a few flowers standing next to each other.
+  function sprig(x, y, rot, scale) {
+    const g = make("g", {
+      class: "lily-sprig",
+      transform: "translate(" + x + "," + y + ") rotate(" + rot + ") scale(" + scale + ")",
+    });
+    g.appendChild(make("path", {
+      d: "M0,0 C-4,-26 2,-52 0,-74", fill: "none",
+      stroke: "#5c8a50", "stroke-width": 2, opacity: 0.8,
+    }));
+    const buds = [
+      [0, -78, 5], [-13, -66, 4], [12, -62, 4.2], [-9, -46, 3.4],
+      [11, -40, 3.2], [-17, -80, 3.4], [16, -82, 3.2], [2, -94, 3.6],
+    ];
+    buds.forEach(([bx, by, r], i) => {
       g.appendChild(make("path", {
-        d: "M" + x + "," + y + " C" + x * 0.9 + "," + (y + 70) + " " +
-           (TIE_X + (x > 0 ? 14 : -14)) + "," + (TIE_Y - 60) + " " + TIE_X + "," + TIE_Y,
-        fill: "none", stroke: "url(#lilyStem)", "stroke-width": w, "stroke-linecap": "round",
+        d: "M0,-" + (74 - i * 4) + " Q" + bx * 0.6 + "," + (by + 8) + " " + bx + "," + by,
+        fill: "none", stroke: "#5c8a50", "stroke-width": 1.2, opacity: 0.6,
       }));
+      g.appendChild(make("circle", { cx: bx, cy: by, r: r, fill: "#fdeef1", opacity: 0.92 }));
     });
     return g;
   }
 
+  // Every stem runs down to the one point where the bunch is tied.
+  const TIE_X = 0;
+  const TIE_Y = 262;
+
+  function stemTo(x, y, w, op) {
+    return make("path", {
+      d: "M" + x + "," + y + " C" + x * 0.86 + "," + (y + 80) + " " +
+         (TIE_X + (x > 0 ? 18 : -18)) + "," + (TIE_Y - 70) + " " + TIE_X + "," + TIE_Y,
+      fill: "none", stroke: "url(#lilyStem)", "stroke-width": w,
+      "stroke-linecap": "round", opacity: op == null ? 1 : op,
+    });
+  }
+
+  function stems(list) {
+    const g = make("g", { class: "lily-stems" });
+    list.forEach(([x, y, w, op]) => g.appendChild(stemTo(x, y, w, op)));
+    return g;
+  }
+
+  // Paper, not a pot: two sheets, creased, narrowing to the tie.
   function wrap() {
     const g = make("g", { class: "lily-wrap" });
-    // the paper the bunch is held in
+
+    // the sheet behind, showing past the front one on both sides
     g.appendChild(make("path", {
-      d: "M-104,198 C-58,232 58,232 104,198 L30,344 C10,352 -10,352 -30,344 Z",
-      fill: "url(#lilyWrap)", opacity: 0.96,
+      d: "M-132,172 L-96,196 L-54,174 L-8,200 L40,176 L88,198 L130,170 " +
+         "L34,348 C12,358 -12,358 -34,348 Z",
+      fill: "#5c1326", opacity: 0.92,
     }));
-    // folds in the paper
-    [[-56, 214, -18, 338], [0, 226, 0, 346], [56, 214, 18, 338]].forEach(([x1, y1, x2, y2]) => {
-      g.appendChild(make("path", {
-        d: "M" + x1 + "," + y1 + " L" + x2 + "," + y2,
-        stroke: "#e892a6", "stroke-width": 1.6, opacity: 0.3, fill: "none",
-      }));
-    });
+
+    // the sheet in front, its top edge folded into points
     g.appendChild(make("path", {
-      d: "M-104,198 C-58,232 58,232 104,198", fill: "none",
-      stroke: "#f0aebd", "stroke-width": 3.4, opacity: 0.85,
+      d: "M-108,196 L-74,222 L-34,198 L8,224 L50,200 L92,220 L106,196 " +
+         "L28,344 C10,352 -10,352 -28,344 Z",
+      fill: "url(#lilyWrap)",
     }));
-    // and the ribbon round it
-    g.appendChild(make("rect", { x: -46, y: 276, width: 92, height: 14, rx: 7, fill: "#e892a6" }));
+
+    // creases running down to the point
+    [[-70, 224, -18, 340], [-24, 206, -7, 344], [22, 214, 8, 344], [68, 216, 19, 340]]
+      .forEach(([x1, y1, x2, y2]) => {
+        g.appendChild(make("path", {
+          d: "M" + x1 + "," + y1 + " L" + x2 + "," + y2,
+          stroke: "#e892a6", "stroke-width": 1.5, opacity: 0.26, fill: "none",
+        }));
+      });
+
+    // a highlight along the folded edge
     g.appendChild(make("path", {
-      d: "M-9,284 C-32,268 -53,272 -55,286 C-53,300 -32,302 -9,286 Z", fill: "#f0aebd",
+      d: "M-108,196 L-74,222 L-34,198 L8,224 L50,200 L92,220 L106,196",
+      fill: "none", stroke: "#f0aebd", "stroke-width": 2.6, opacity: 0.7,
+    }));
+
+    // ribbon, with tails
+    g.appendChild(make("path", {
+      d: "M-8,278 C-28,312 -34,338 -22,356", fill: "none",
+      stroke: "#e892a6", "stroke-width": 5, "stroke-linecap": "round", opacity: 0.9,
     }));
     g.appendChild(make("path", {
-      d: "M9,284 C32,268 53,272 55,286 C53,300 32,302 9,286 Z", fill: "#f0aebd",
+      d: "M8,278 C30,310 38,336 28,358", fill: "none",
+      stroke: "#f0aebd", "stroke-width": 5, "stroke-linecap": "round", opacity: 0.9,
     }));
-    g.appendChild(make("circle", { cx: 0, cy: 285, r: 7, fill: "#f6dbe2" }));
+    g.appendChild(make("rect", { x: -42, y: 264, width: 84, height: 13, rx: 6.5, fill: "#e892a6" }));
+    g.appendChild(make("path", {
+      d: "M-8,271 C-30,254 -50,258 -52,271 C-50,285 -30,288 -8,272 Z", fill: "#f0aebd",
+    }));
+    g.appendChild(make("path", {
+      d: "M8,271 C30,254 50,258 52,271 C50,285 30,288 8,272 Z", fill: "#f0aebd",
+    }));
+    g.appendChild(make("circle", { cx: 0, cy: 271, r: 6.5, fill: "#f6dbe2" }));
     return g;
   }
 
   function buildLily() {
     const svg = make("svg", {
-      viewBox: "-230 -200 460 560",
+      viewBox: "-250 -250 500 650",
       class: "lily-svg",
       role: "img",
       "aria-label": "A bouquet of lilies",
@@ -233,20 +282,39 @@
 
     const figure = make("g", { class: "lily-figure" });
 
+    // Back: foliage fanning out, deliberately uneven.
     const greens = make("g", { class: "lily-greens" });
-    greens.appendChild(leaf(-30, 150, 166, 1.15));
-    greens.appendChild(leaf(30, 142, 14, 1.15));
-    greens.appendChild(leaf(-22, 200, 200, 0.9));
-    greens.appendChild(leaf(22, 196, -20, 0.9));
+    [
+      [-28, 120, 182, 1.25, "#33512e"], [26, 112, -8, 1.15, "#33512e"],
+      [-34, 168, 206, 1.0, "#2c4728"], [30, 160, -26, 0.95, "#2c4728"],
+      [-20, 80, 158, 0.85, "#3f6239"], [22, 64, 20, 0.8, "#3f6239"],
+      [-14, 196, 224, 0.72, "#2c4728"], [18, 200, -44, 0.68, "#2c4728"],
+    ].forEach(([x, y, r, s, c]) => greens.appendChild(leaf(x, y, r, s, c)));
     figure.appendChild(greens);
 
-    figure.appendChild(stems());
+    // Filler, at seven different heights so nothing lines up.
+    const fillers = make("g", { class: "lily-fillers" });
+    [
+      [-186, 36, -26, 0.95], [182, 10, 24, 0.9], [-120, -58, -14, 0.8],
+      [126, -74, 15, 0.85], [-62, -128, -7, 0.7], [66, -140, 8, 0.72],
+      [-210, 120, -34, 0.65], [206, 104, 32, 0.62],
+    ].forEach(([x, y, r, s]) => fillers.appendChild(sprig(x, y, r, s)));
+    figure.appendChild(fillers);
 
+    figure.appendChild(stems([
+      [0, 40, 9], [-150, 78, 6.5], [146, 34, 6.5],
+      [-186, 36, 3.4, 0.75], [182, 10, 3.4, 0.75],
+      [-176, -18, 5], [168, -48, 5], [-58, -96, 4.4],
+      [-30, 130, 5, 0.9], [38, 136, 5, 0.9],
+    ]));
+
+    // Mid: the flowers she doesn't pick, at four different heights.
     const extra = make("g", { class: "lily-extra" });
-    extra.appendChild(bud(-156, -16, -30, 1.05));
-    extra.appendChild(bud(162, -28, 26, 0.98));
-    extra.appendChild(sideLily(-128, 96, 0.58, -16, 0.82));
-    extra.appendChild(sideLily(132, 78, 0.62, 18, 0.82));
+    extra.appendChild(bud(-176, -18, -32, 1.05));
+    extra.appendChild(bud(168, -48, 28, 0.95));
+    extra.appendChild(bud(-58, -96, -11, 0.78));
+    extra.appendChild(sideLily(-150, 78, 0.6, -20, 0.8));
+    extra.appendChild(sideLily(146, 34, 0.52, 22, 0.74));
     figure.appendChild(extra);
 
     figure.appendChild(wrap());
@@ -260,7 +328,7 @@
     }
     head.appendChild(make("circle", { r: 40, fill: "url(#lilyThroat)", class: "lily-throat" }));
     head.appendChild(buildStamens());
-    head.setAttribute("transform", "translate(0,40)");
+    head.setAttribute("transform", "translate(0,38)");
 
     figure.appendChild(head);
     svg.appendChild(figure);
