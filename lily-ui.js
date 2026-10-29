@@ -7,14 +7,13 @@
 
   const NS = "http://www.w3.org/2000/svg";
   const PETALS = 6;
-
-  // One tepal, pointing straight up from the flower's middle. Narrow at the
-  // base, widest about two thirds along, recurving to a point -- a lily, not
-  // a daisy.
+  // One tepal. Broad and overlapping, the way a stargazer's are -- six narrow
+  // ones spaced evenly read as a starfish, not a lily.
   const PETAL_D =
-    "M0,-4 C11,-20 24,-54 20,-94 C18,-115 9,-128 0,-136 " +
-    "C-9,-128 -18,-115 -20,-94 C-24,-54 -11,-20 0,-4 Z";
-  const VEIN_D = "M0,-10 C3,-44 4,-84 0,-126";
+    "M0,-4 C14,-15 29,-33 33,-61 C37,-89 25,-115 9,-132 " +
+    "C5,-136 -5,-136 -9,-132 C-25,-115 -37,-89 -33,-61 C-29,-33 -14,-15 0,-4 Z";
+  const VEIN_D = "M0,-10 C4,-44 5,-86 1,-124";
+  const RUFFLE_D = "M-24,-96 C-14,-108 14,-108 24,-96";
 
   const make = (tag, attrs) => {
     const n = document.createElementNS(NS, tag);
@@ -25,47 +24,76 @@
   function defs() {
     const d = make("defs");
 
-    // deep at the throat, almost white at the tip
     const g = make("linearGradient", {
       id: "lilyPetal",
       gradientUnits: "userSpaceOnUse",
       x1: 0, y1: -4, x2: 0, y2: -136,
     });
-    [["0%", "#b8455f"], ["26%", "#e28fa0"], ["62%", "#f7d3db"], ["100%", "#fff6f8"]]
+    [["0%", "#a8374f"], ["18%", "#d4718a"], ["46%", "#f0b9c6"], ["78%", "#fbe4ea"], ["100%", "#fffafb"]]
       .forEach(([o, c]) => g.appendChild(make("stop", { offset: o, "stop-color": c })));
     d.appendChild(g);
 
     const throat = make("radialGradient", { id: "lilyThroat" });
-    [["0%", "#7a1230"], ["55%", "#b8455f"], ["100%", "rgba(184,69,95,0)"]]
+    [["0%", "#6d0f2b"], ["45%", "#a8374f"], ["100%", "rgba(168,55,79,0)"]]
       .forEach(([o, c]) => throat.appendChild(make("stop", { offset: o, "stop-color": c })));
     d.appendChild(throat);
 
     const stem = make("linearGradient", { id: "lilyStem", x1: "0", y1: "0", x2: "1", y2: "0" });
-    [["0%", "#4f7a46"], ["50%", "#6fa05f"], ["100%", "#3f6239"]]
+    [["0%", "#3f6239"], ["50%", "#6fa05f"], ["100%", "#355330"]]
       .forEach(([o, c]) => stem.appendChild(make("stop", { offset: o, "stop-color": c })));
     d.appendChild(stem);
+
+    const leaf = make("linearGradient", { id: "lilyLeaf", x1: "0", y1: "0", x2: "1", y2: "1" });
+    [["0%", "#5c8a50"], ["100%", "#33512e"]]
+      .forEach(([o, c]) => leaf.appendChild(make("stop", { offset: o, "stop-color": c })));
+    d.appendChild(leaf);
+
+    const wrap = make("linearGradient", { id: "lilyWrap", x1: "0", y1: "0", x2: "1", y2: "0" });
+    [["0%", "#7c1c34"], ["45%", "#a8374f"], ["100%", "#611427"]]
+      .forEach(([o, c]) => wrap.appendChild(make("stop", { offset: o, "stop-color": c })));
+    d.appendChild(wrap);
 
     return d;
   }
 
   function speckles(seed) {
     const g = make("g", { class: "lily-speckles" });
-    for (let i = 0; i < 9; i++) {
-      // fixed pseudo-random, so the freckles don't dance between redraws
+    for (let i = 0; i < 11; i++) {
       const r = Math.sin((seed * 9 + i) * 12.9898) * 43758.5453;
       const f = r - Math.floor(r);
       const r2 = Math.sin((seed * 3 + i) * 78.233) * 43758.5453;
       const f2 = r2 - Math.floor(r2);
       g.appendChild(make("ellipse", {
-        cx: (f - 0.5) * 20,
-        cy: -16 - f2 * 52,
-        rx: 1.9,
-        ry: 2.9,
-        fill: "#7a1230",
-        opacity: 0.55,
+        cx: (f - 0.5) * 30,
+        cy: -14 - f2 * 60,
+        rx: 2.1,
+        ry: 3.3,
+        fill: "#6d0f2b",
+        opacity: 0.5,
       }));
     }
     return g;
+  }
+
+  // The shape of one tepal, with or without the bits that make it tappable.
+  function petalShape(seed, plain) {
+    const shape = make("g", { class: "lily-petal-shape" });
+    shape.appendChild(make("path", { d: PETAL_D, fill: "url(#lilyPetal)" }));
+    shape.appendChild(make("path", {
+      d: VEIN_D, fill: "none", stroke: "#c9607c", "stroke-width": 1.5, opacity: 0.4,
+    }));
+    shape.appendChild(make("path", {
+      d: RUFFLE_D, fill: "none", stroke: "#fff", "stroke-width": 1.6, opacity: 0.3,
+    }));
+    shape.appendChild(speckles(seed));
+    if (!plain) {
+      shape.appendChild(make("path", { d: PETAL_D, class: "lily-shimmer", fill: "#fff" }));
+      shape.appendChild(make("path", {
+        d: PETAL_D, class: "lily-outline", fill: "none",
+        stroke: "#fff6f8", "stroke-width": 2.6,
+      }));
+    }
+    return shape;
   }
 
   function buildPetal(i) {
@@ -73,16 +101,7 @@
     // animated: a petal has to fall DOWN the screen, whichever way it points.
     const outer = make("g", { class: "lily-petal", "data-i": i, tabindex: "0", role: "button" });
     const spun = make("g", { transform: "rotate(" + i * (360 / PETALS) + ")" });
-    const shape = make("g", { class: "lily-petal-shape" });
-
-    shape.appendChild(make("path", { d: PETAL_D, fill: "url(#lilyPetal)" }));
-    shape.appendChild(make("path", {
-      d: VEIN_D, fill: "none", stroke: "#d98fa2", "stroke-width": 1.4, opacity: 0.5,
-    }));
-    shape.appendChild(speckles(i + 1));
-    shape.appendChild(make("path", { d: PETAL_D, class: "lily-shimmer", fill: "#fff" }));
-
-    spun.appendChild(shape);
+    spun.appendChild(petalShape(i + 1, false));
     outer.appendChild(spun);
     return outer;
   }
@@ -91,54 +110,146 @@
     const g = make("g", { class: "lily-stamens" });
     for (let i = 0; i < 6; i++) {
       const a = (i * 60 + 30) * (Math.PI / 180);
-      const len = 46 + (i % 2) * 9;
+      const len = 50 + (i % 2) * 10;
       const tx = Math.cos(a - Math.PI / 2) * len;
       const ty = Math.sin(a - Math.PI / 2) * len;
       g.appendChild(make("path", {
-        d: "M0,0 Q" + tx * 0.45 + "," + (ty * 0.45 - 10) + " " + tx + "," + ty,
-        fill: "none", stroke: "#f2d7a8", "stroke-width": 2.1, "stroke-linecap": "round",
+        d: "M0,0 Q" + tx * 0.45 + "," + (ty * 0.45 - 11) + " " + tx + "," + ty,
+        fill: "none", stroke: "#f2d7a8", "stroke-width": 2.2, "stroke-linecap": "round",
       }));
       const ang = (Math.atan2(ty, tx) * 180) / Math.PI;
       g.appendChild(make("rect", {
-        x: -7, y: -2.6, width: 14, height: 5.2, rx: 2.6, fill: "#b5651f",
+        x: -8, y: -2.9, width: 16, height: 5.8, rx: 2.9, fill: "#b5651f",
         transform: "translate(" + tx + "," + ty + ") rotate(" + ang + ")",
       }));
     }
-    // the pistil, standing a little proud of the rest
     g.appendChild(make("path", {
-      d: "M0,0 Q6,-30 3,-62", fill: "none", stroke: "#dff0cf",
-      "stroke-width": 2.6, "stroke-linecap": "round",
+      d: "M0,0 Q7,-32 4,-66", fill: "none", stroke: "#dff0cf",
+      "stroke-width": 2.8, "stroke-linecap": "round",
     }));
-    g.appendChild(make("circle", { cx: 3, cy: -62, r: 4.6, fill: "#c9e6a8" }));
+    g.appendChild(make("circle", { cx: 4, cy: -66, r: 5, fill: "#c9e6a8" }));
     return g;
   }
 
-  function buildStem() {
-    const g = make("g", { class: "lily-stem" });
+  // The flowers behind the one she picks from. Same shape, smaller and dimmer,
+  // and deliberately not tappable.
+  function sideLily(x, y, scale, rot, opacity) {
+    const g = make("g", {
+      class: "lily-side",
+      transform: "translate(" + x + "," + y + ") rotate(" + rot + ") scale(" + scale + ")",
+      opacity: opacity,
+    });
+    for (let i = 0; i < PETALS; i++) {
+      const spun = make("g", { transform: "rotate(" + (i * 60 + 22) + ")" });
+      spun.appendChild(petalShape(i + 7, true));
+      g.appendChild(spun);
+    }
+    g.appendChild(make("circle", { r: 30, fill: "url(#lilyThroat)" }));
+    g.appendChild(buildStamens());
+    return g;
+  }
+
+  function bud(x, y, rot, scale) {
+    const g = make("g", {
+      class: "lily-bud",
+      transform: "translate(" + x + "," + y + ") rotate(" + rot + ") scale(" + scale + ")",
+    });
     g.appendChild(make("path", {
-      d: "M0,30 C7,110 -5,180 2,258", fill: "none",
-      stroke: "url(#lilyStem)", "stroke-width": 9, "stroke-linecap": "round",
+      d: "M0,0 C-17,-16 -19,-52 0,-76 C19,-52 17,-16 0,0 Z", fill: "#e8aebc",
     }));
     g.appendChild(make("path", {
-      d: "M1,150 C-42,138 -72,158 -86,186 C-52,196 -16,184 1,162 Z", fill: "#4f7a46", opacity: 0.95,
+      d: "M0,0 C-9,-16 -10,-50 0,-74 C10,-50 9,-16 0,0 Z", fill: "#f6d6de", opacity: 0.75,
     }));
     g.appendChild(make("path", {
-      d: "M2,200 C40,190 70,208 84,234 C50,244 16,230 2,210 Z", fill: "#5c8a50", opacity: 0.95,
+      d: "M0,2 C-11,-10 -12,-34 -2,-48", fill: "none", stroke: "#5c8a50",
+      "stroke-width": 3.4, "stroke-linecap": "round", opacity: 0.9,
     }));
+    return g;
+  }
+
+  function leaf(x, y, rot, scale) {
+    return make("path", {
+      d: "M0,0 C34,-16 78,-10 104,16 C72,38 30,30 0,6 Z",
+      fill: "url(#lilyLeaf)",
+      transform: "translate(" + x + "," + y + ") rotate(" + rot + ") scale(" + scale + ")",
+    });
+  }
+
+  // Stems all converging on the point where the bunch is tied.
+  function stems() {
+    const g = make("g", { class: "lily-stems" });
+    const TIE_X = 0, TIE_Y = 268;
+    [
+      [0, 40, 9], [-128, 96, 6.5], [132, 78, 6.5],
+      [-156, -16, 5.5], [162, -28, 5.5], [-30, 120, 5], [38, 130, 5],
+    ].forEach(([x, y, w]) => {
+      g.appendChild(make("path", {
+        d: "M" + x + "," + y + " C" + x * 0.9 + "," + (y + 70) + " " +
+           (TIE_X + (x > 0 ? 14 : -14)) + "," + (TIE_Y - 60) + " " + TIE_X + "," + TIE_Y,
+        fill: "none", stroke: "url(#lilyStem)", "stroke-width": w, "stroke-linecap": "round",
+      }));
+    });
+    return g;
+  }
+
+  function wrap() {
+    const g = make("g", { class: "lily-wrap" });
+    // the paper the bunch is held in
+    g.appendChild(make("path", {
+      d: "M-104,198 C-58,232 58,232 104,198 L30,344 C10,352 -10,352 -30,344 Z",
+      fill: "url(#lilyWrap)", opacity: 0.96,
+    }));
+    // folds in the paper
+    [[-56, 214, -18, 338], [0, 226, 0, 346], [56, 214, 18, 338]].forEach(([x1, y1, x2, y2]) => {
+      g.appendChild(make("path", {
+        d: "M" + x1 + "," + y1 + " L" + x2 + "," + y2,
+        stroke: "#e892a6", "stroke-width": 1.6, opacity: 0.3, fill: "none",
+      }));
+    });
+    g.appendChild(make("path", {
+      d: "M-104,198 C-58,232 58,232 104,198", fill: "none",
+      stroke: "#f0aebd", "stroke-width": 3.4, opacity: 0.85,
+    }));
+    // and the ribbon round it
+    g.appendChild(make("rect", { x: -46, y: 276, width: 92, height: 14, rx: 7, fill: "#e892a6" }));
+    g.appendChild(make("path", {
+      d: "M-9,284 C-32,268 -53,272 -55,286 C-53,300 -32,302 -9,286 Z", fill: "#f0aebd",
+    }));
+    g.appendChild(make("path", {
+      d: "M9,284 C32,268 53,272 55,286 C53,300 32,302 9,286 Z", fill: "#f0aebd",
+    }));
+    g.appendChild(make("circle", { cx: 0, cy: 285, r: 7, fill: "#f6dbe2" }));
     return g;
   }
 
   function buildLily() {
     const svg = make("svg", {
-      viewBox: "-150 -150 300 420",
+      viewBox: "-230 -200 460 560",
       class: "lily-svg",
       role: "img",
-      "aria-label": "A lily with six petals",
+      "aria-label": "A bouquet of lilies",
     });
     svg.appendChild(defs());
 
     const figure = make("g", { class: "lily-figure" });
-    figure.appendChild(buildStem());
+
+    const greens = make("g", { class: "lily-greens" });
+    greens.appendChild(leaf(-30, 150, 166, 1.15));
+    greens.appendChild(leaf(30, 142, 14, 1.15));
+    greens.appendChild(leaf(-22, 200, 200, 0.9));
+    greens.appendChild(leaf(22, 196, -20, 0.9));
+    figure.appendChild(greens);
+
+    figure.appendChild(stems());
+
+    const extra = make("g", { class: "lily-extra" });
+    extra.appendChild(bud(-156, -16, -30, 1.05));
+    extra.appendChild(bud(162, -28, 26, 0.98));
+    extra.appendChild(sideLily(-128, 96, 0.58, -16, 0.82));
+    extra.appendChild(sideLily(132, 78, 0.62, 18, 0.82));
+    figure.appendChild(extra);
+
+    figure.appendChild(wrap());
 
     const head = make("g", { class: "lily-head" });
     const petals = [];
@@ -147,8 +258,9 @@
       petals.push(p);
       head.appendChild(p);
     }
-    head.appendChild(make("circle", { r: 34, fill: "url(#lilyThroat)", class: "lily-throat" }));
+    head.appendChild(make("circle", { r: 40, fill: "url(#lilyThroat)", class: "lily-throat" }));
     head.appendChild(buildStamens());
+    head.setAttribute("transform", "translate(0,40)");
 
     figure.appendChild(head);
     svg.appendChild(figure);
@@ -204,6 +316,7 @@
 
     const stage = document.getElementById("lily-stage");
     const hintEl = document.getElementById("lily-hint");
+    const promptEl = document.getElementById("lily-prompt");
     const trayEl = document.getElementById("lily-tray");
     const cardEl = document.getElementById("lily-card");
     const cardTitle = document.getElementById("lily-card-title");
@@ -296,7 +409,7 @@
       node.classList.add("is-gone");
       node.setAttribute("tabindex", "-1");
       node.style.pointerEvents = "none";
-      hintEl.classList.add("is-done");
+      promptEl.classList.add("is-done");
       pluckSound();
 
       const land = () => {
