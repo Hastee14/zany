@@ -2461,3 +2461,15 @@ body.reading-m3:has(.lily-tray-wrap:not([hidden])) .lily-svg {
     margin: 0 0 0 -1px;
     background: linear-gradient(180deg, rgba(201,96,124,0) 0%, rgba(201,96,124,.4) 24%, rgba(201,96,124,.2) 100%);
 }
+
+/* ---------- No white edges on a phone ----------
+   iOS doesn't always propagate the body's background to the canvas when the
+   body is the scroller, so bare white showed above and below the page. The
+   root carries the ground colour too, and any gap is maroon instead. */
+html { background-color: var(--bg); }
+html:has(body.reading-m3) { background-color: var(--ly-night); }
+html:has(body.reading-m2) { background-color: var(--m2-ground); }
+
+/* belt and braces for anything that doesn't support :has() */
+body { background-color: var(--bg); }
+body.reading-m3 { background-color: var(--ly-night); }

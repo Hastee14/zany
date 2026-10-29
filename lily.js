@@ -53,8 +53,10 @@ const LILY = {
   ],
 
   /* ---------- Music. Leave song as "" for a quiet page.
-     `volume` is 0 to 1 -- this track is a loud recording, so it is set low. ---------- */
-  song: "song3.mp3",
+     `volume` is 0 to 1 -- this track is a loud recording, so it is set low.
+     The file is AAC rather than MP3: same song, a little under half the
+     download, so it starts sooner on her phone. ---------- */
+  song: "song3.m4a",
   songStart: 0,
   volume: 0.12,
 };

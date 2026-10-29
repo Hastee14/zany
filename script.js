@@ -1311,6 +1311,33 @@ function startMusic(src, startAt, vol) {
     });
 }
 
+// Lock the phone, or switch tabs, and the music should stop with you. iOS
+// keeps a page's audio going in the background otherwise, so it plays on from
+// her pocket.
+let pausedByLeaving = false;
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    if (!song.paused) {
+      song.pause();
+      pausedByLeaving = true;
+    }
+    return;
+  }
+  if (pausedByLeaving) {
+    pausedByLeaving = false;
+    // only if she hadn't muted it herself before leaving
+    if (songWanted && !musicToggle.classList.contains("is-muted")) {
+      song.play().catch(() => { });
+    }
+  }
+});
+
+// Leaving the page for good: stop, don't fade out somewhere in the background.
+window.addEventListener("pagehide", () => {
+  song.pause();
+});
+
 // A video is playing: get out of its way
 function duckSong() {
   if (!song.paused) {
