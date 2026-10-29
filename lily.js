@@ -16,7 +16,7 @@
    a petal with no picture. Landscape photos fit the petal best.
    ============================================================================ */
 const LILY = {
-  hint: "pick a petal 🌸",
+  hint: "pick a petal",
 
   /* ---------- The six petals, in the order she'll most likely tap them ---------- */
   petals: [

@@ -2381,3 +2381,42 @@ body.reading-m3:has(.lily-tray-wrap:not([hidden])) .lily-svg {
     height: auto;
     max-height: 53svh;
 }
+
+/* The writing is pinned top and bottom now, so it occupies the same band of
+   the petal whatever the card's size, and scrolls within it when there is
+   more than the shape can hold. */
+.lily-card-body {
+    bottom: 21.5%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+}
+
+.lily-card-body::-webkit-scrollbar { display: none; }
+
+/* ---------- Centred, but still scrollable to the top ----------
+   justify-content:center on a scroll container cuts the overflow off at
+   BOTH ends -- the top of the photo was unreachable. Auto margins centre
+   the same way without stealing the top. */
+.lily-card-body { justify-content: flex-start; }
+.lily-card-body > :first-child { margin-top: auto; }
+.lily-card-body > :last-child { margin-bottom: auto; }
+
+/* a touch smaller, so the first lines of the note show beside it */
+.lily-card-photo { width: min(100%, 265px); }
+
+@media (min-width: 701px) {
+    .lily-card-photo { width: min(100%, 330px); }
+}
+
+/* On a phone the photo was eating the whole readable band, leaving one line
+   of the note showing. Smaller here; the petal is allowed to be a little
+   taller too, so three or four lines sit under it. */
+@media (max-width: 700px) {
+    .lily-card-photo { width: min(100%, 205px); }
+}
+
+/* A min-height left over from an earlier pass was overriding the height JS
+   works out, so on wider screens the petal was being forced to 464px
+   whatever the note said. The measured height is the authority. */
+.lily-card-inner { min-height: 0; }

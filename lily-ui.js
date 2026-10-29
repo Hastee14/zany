@@ -375,8 +375,24 @@
     const INSET_BAND = 0.57;
 
     function sizeToContent() {
-      cardInner.style.height = "auto";
-      const h = cardBody.offsetHeight / INSET_BAND;
+      const w = cardInner.offsetWidth;
+
+      // Measure the writing at its natural height: with no bottom to pin it
+      // the box is only as tall as what is in it.
+      cardBody.style.bottom = "auto";
+      cardBody.style.height = "auto";
+      cardBody.style.overflowY = "visible";
+      const contentH = cardBody.offsetHeight;
+      cardBody.style.bottom = "";
+      cardBody.style.height = "";
+      cardBody.style.overflowY = "";
+
+      // The outline stretches with the card, so letting the card grow without
+      // limit turned the petal into an egg. It may grow for a longer note,
+      // but only so far -- past that the writing scrolls inside the shape.
+      const natural = contentH / INSET_BAND;
+      const cap = Math.min(w * 1.25, window.innerHeight * 0.84);
+      const h = Math.max(w / 1.5, Math.min(natural, cap));
       cardInner.style.height = Math.ceil(h) + "px";
     }
 
