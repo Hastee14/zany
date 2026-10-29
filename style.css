@@ -2302,3 +2302,41 @@ body.reading-m3:has(#lily-final:not([hidden])) .lily-svg {
     height: auto;
     max-height: 30svh;
 }
+
+/* ---------- Bigger, and easier to read ----------
+   The note was 13-16px in a handwriting face on pink: small, light and
+   hard work. Half as big again, a heavier weight so the strokes hold up,
+   darker ink, and more air between the lines. */
+.lily-card-text {
+    font-size: clamp(18px, 4.3vw, 25px);
+    font-weight: 500;
+    line-height: 1.52;
+    color: #46091b;
+}
+
+.lily-card-title {
+    font-size: clamp(15px, 3.3vw, 19px);
+    color: #6d0f2b;
+}
+
+.lily-card-num {
+    font-size: clamp(17px, 3.6vw, 22px);
+    color: rgba(109, 15, 43, 0.62);
+}
+
+/* A longer note at a bigger size can make the petal taller than the screen,
+   so the sheet behind it scrolls rather than hiding the end of the note. */
+.lily-card {
+    align-items: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4vh 5vw 5vh;
+}
+
+.lily-card-stack { margin: auto; }
+
+/* The sheet has 5vw of padding on each side, so a card of 93vw could never
+   fit inside it -- it overflowed sideways the moment the sheet became a
+   scroll container. 86vw leaves room for both margins. */
+.lily-card { padding: 4vh 4vw 5vh; }
+.lily-card-inner { width: min(86vw, 860px); }
